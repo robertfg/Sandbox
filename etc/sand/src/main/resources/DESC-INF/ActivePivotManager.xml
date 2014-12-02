@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<managerDescription xmlns:p="http://jaxb.dev.java.net/array" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+
+	<!-- Composition of the ActivePivot Sandbox catalog -->
+	<catalogs>
+		<catalog id="Sandbox">
+			<activePivot id="EquityDerivativesCube" />
+			<activePivot id="EquityDerivativesCubeDist" />
+			<activePivot id="EquityDerivativesCubeSmall" />
+			<activePivot id="EquityDerivativesCubeEURGBP" />
+		</catalog>
+	</catalogs>
+	
+	<!-- List of the schemas handled by this manager -->
+	<schemas>
+		<schema id="SandboxSchema">
+			<schemaDescription resource="DESC-INF/SandboxSchema.xml" />
+		</schema>
+	</schemas>
+
+</managerDescription>

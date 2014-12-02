@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<userRole xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+
+	<!-- A global role is a collection of context values           -->
+	<!-- that will be applied on any queried ActivePivot instance. -->
+	<globalRole>
+		<referenceCurrency currency="ZAR" />
+	</globalRole>
+
+</userRole>

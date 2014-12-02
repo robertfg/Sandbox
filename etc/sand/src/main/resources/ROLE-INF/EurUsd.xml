@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<userRole xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+
+	<!-- A pivot role is a collection of context values         -->
+	<!-- that will be applied only on one ActivePivot instance. -->
+	<pivotsRoles id="EquityDerivativesCube">
+		<subCubeProperties isAccessGranted="true">
+			<grantedMeasures />
+			<dimensionRestrictions>
+				<dimension name="Underlyings">
+					<allowedMember>AllMember\USD</allowedMember>
+					<allowedMember>AllMember\EUR</allowedMember>
+				</dimension>
+			</dimensionRestrictions>
+		</subCubeProperties>
+		<referenceCurrency currency="CHF" />
+		<aliases>
+			<measures>
+				<measure name="contributors.COUNT" 		alias="Count" />
+				<measure name="update.TIMESTAMP" 		alias="Timestamp" />
+				<measure name="pnl.SUM" 				alias="PnL" />
+				<measure name="pnl.CONTINUOUS_FOREX" 	alias="PnL FX" />
+				<measure name="pnl.ALLMEMBER_HIDE" 		alias="PnL AllMemberHide" />
+				<measure name="pnlDelta.SUM" 			alias="PnL Delta" />
+				<measure name="pnlVega.SUM" 			alias="PnL Vega" />
+				<measure name="delta.SUM" 				alias="Delta" />
+				<measure name="gamma.SUM" 				alias="Gamma" />
+				<measure name="vega.SUM" 				alias="Vega" />
+				<measure name="theta.SUM" 				alias="Theta" />
+				<measure name="rho.SUM" 				alias="Rho" />
+				<measure name="pv.SUM" 					alias="PV" />
+				<measure name="pv.UnderlyingsRatio" 	alias="PV UnderlyingsRatio" />
+			</measures>
+		</aliases>
+	</pivotsRoles>
+
+</userRole>
