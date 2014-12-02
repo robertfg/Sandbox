@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   <util:properties id="financePnlProperties"   location="classpath:resources/properties/financePnl.${env}.properties" />
+ 
+	<bean id="financePnlDB" class="com.anz.rer.etl.csvloader.CsvLoader"> 
+	
+		<constructor-arg index="0" ref="mssqlDataSource" /> <!-- sql datasource -->
+		<constructor-arg index="1" value="1" /> <!-- numberr of threads -->
+		
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value=";" /> <!-- \s*("[^"]*"|[^|,]*)\s* --><!-- for grouping pattern --> 
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" /> <!-- (\r\n|\r|\n|\n\r) combination for crlf -->
+		<property name="insertThreshold" value="2500" />
+		<property name="fileResolver" ref="financePnlFileResolver" />
+
+		<property name="tableName" value="Staging.Finance_PnL" />
+		<property name="postProcSql" value="{call [DW].[LoadFinancePnL]}" />
+		<property name="csvSourceLength" value="8" />
+
+		<property name="valiDateSql">
+		  <value><![CDATA[select JobID from etl.vw_Job where JobTypeID in(24) and Status in('Not Started','Failed')]]></value>
+		</property>
+		
+		<property name="successStatus" value="Complete"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="financePnlDB" />
+		<property name="bussDate" value="1" />
+		<property name="bussDateSplitDelimeter" value="_" />
+		<property name="jobIdLocation" value="3" />
+		
+		
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="financePnlFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="financePnlProperties" />
+	</bean>
+
+     
+    <bean id="financePnlCsvToTableDirectoryProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="financePnlProperties" />
+    	<property name="fileProcessor" ref="financePnlDB" />
+    </bean>
+    
+   
+    <bean id="financePnlDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="financePnlCsvToTableDirectoryProcessor" />
+	    <property name="interval"   	value="20000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="financePnlDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

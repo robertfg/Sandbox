@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<BCPFORMAT xmlns="http://schemas.microsoft.com/sqlserver/2004/bulkload/format" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <RECORD>
+  <FIELD ID="1" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="12"/>
+  <FIELD ID="2" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="15" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="3" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="20" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="4" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="20" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="5" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="40" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="6" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="40" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="7" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="40" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="8" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="40" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="9" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="30" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="10" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="4" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="11" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="5" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="12" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="41"/>
+ </RECORD>
+ <ROW>
+  <COLUMN SOURCE="1" NAME="NB" xsi:type="SQLINT" CSVSOURCE="14" />
+  <COLUMN SOURCE="2" NAME="TP_PFOLIO" xsi:type="SQLVARYCHAR" CSVSOURCE="8" />
+  <COLUMN SOURCE="3" NAME="INSTRUMENT" xsi:type="SQLVARYCHAR" CSVSOURCE="4"/>
+  <COLUMN SOURCE="4" NAME="PL_INSCUR" xsi:type="SQLVARYCHAR" CSVSOURCE="6"/>
+  <COLUMN SOURCE="5" NAME="BRW_NOM1" xsi:type="SQLVARYCHAR" CSVSOURCE="36" />
+  <COLUMN SOURCE="6" NAME="BRW_NOM2" xsi:type="SQLVARYCHAR" CSVSOURCE="37" />
+  <COLUMN SOURCE="7" NAME="PL_CSNFCP2" xsi:type="SQLVARYCHAR" CSVSOURCE="46" />
+  <COLUMN SOURCE="8" NAME="PL_FMV2" xsi:type="SQLVARYCHAR" CSVSOURCE="51" />
+  <COLUMN SOURCE="9" NAME="HF_RPTDTE2" xsi:type="SQLVARYCHAR" CSVSOURCE="52" />
+  <COLUMN SOURCE="10" NAME="VAL_STATUS" xsi:type="SQLVARYCHAR" CSVSOURCE="89" />
+  <COLUMN SOURCE="11" NAME="TRN_GRP" xsi:type="SQLVARYCHAR" CSVSOURCE="1"/>
+  <COLUMN SOURCE="12" NAME="PL_FPNFCP2" xsi:type="SQLNUMERIC" PRECISION="23" SCALE="6" CSVSOURCE="86" />
+ </ROW>
+</BCPFORMAT>

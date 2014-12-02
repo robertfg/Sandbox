@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+
+	<bean id="PSRTranslator"
+		class="com.quartetfs.pivot.anz.source.translator.impl.VRTranslator">
+		<property name="dataSourcefactory" ref="DataSourceServiceFactory" />
+		<property name="keyIdIndex" value="1" />
+		<property name="containerNameIndex" value="3" />
+		<property name="dealNumberIndex" value="19" />
+		<property name="portfolioIndex" value="8" />
+		<property name="baseCCYIndex" value="7" />
+		<property name="familyIdx" value="9" />
+		<property name="groupIdx" value="10" />
+		<property name="typeIdx" value="11" />
+		<property name="mcurrIdx" value="6" />
+		<property name="instrumentIdx" value="12" />
+
+		<property name="portfolioHierarchyIndex" value="44" />
+		<property name="geoHierachyIndex" value="45" />
+		<property name="currPairHierachyIndex" value="46" />
+		<property name="equityHierachyIndex" value="47" />
+		<property name="currGroupHierachyIndex" value="48" />
+		<property name="currHierachyIndex" value="49" />
+		<property name="psrNameIndex" value="42" />
+		<property name="commodityGroupHierarchyIndex" value="69" />
+		<property name="issuerHieIndex" value="100"/>
+		<property name="legalEntityHieIndex" value="101"/>
+		<property name="dealCurrHierachyIndex" value="102"/>
+		<property name="financeHierachyIndex" value="107"/>
+		<property name="revenueHierachyIndex" value="112"/>
+		
+
+		<property name="columnCalculators">
+			<list>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="sourceSystem" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="0" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="entity" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="2" />
+				</bean>
+
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="containerName" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="3" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="horizon" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="4" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="date" />
+					<property name="columnType" value="date[dd-MM-yyyy]" />
+					<property name="sourcePosition" value="5" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="exchange" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="13" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="issuer" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="14" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="sector" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="15" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="seniority" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="16" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="country" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="17" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="rating" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="18" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="counterpart" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="20" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="transactiondate" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="21" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="callput" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="23" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="americanEuropean" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="24" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="result" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="25" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="resultV" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="26" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioValue" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="27" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="equity" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="28" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="currency" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="29" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="currencypair" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="30" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ircurve" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="31" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="fxspot" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="32" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="equityspot" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="33" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="fxvol" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="34" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="equityvol" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="35" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ir" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="36" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="shockdays" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="37" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="term" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="38" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="stressscenarios" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="39" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="desc0" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="40" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="desc1" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="41" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="psrName" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="42" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="correctionFlag" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="43" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="nationalMarket" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="50" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="equityLongDesc" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="51" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="irvol" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="52" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="termBucket" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="53" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="olabel" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="54" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="rskLabel1" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="55" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="rskLabel2" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="56" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="rskLabel3" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="57" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ccyPairGrouping" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="58" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="mResultDealccy" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="59" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="mResultVDealccy" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="60" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="spreadType" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="61" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioTermUnderlying" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="62" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="termBucketUnderlying" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="63" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioIRGamma" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="64" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="FxResultVector" />
+					<property name="columnType" value="double[40][|]" />
+					<property name="sourcePosition" value="65" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="FxResultVVector" />
+					<property name="columnType" value="double[40][|]" />
+					<property name="sourcePosition" value="66" />
+				</bean>
+
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="spreadType2" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="67" />
+				</bean>
+
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="positionId" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="68" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioComVol" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="70" />
+				</bean>
+
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioComPrice" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="71" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="comLongname" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="72" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="comShortname" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="73" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="comProductGroup" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="74" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="stressLabel" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="75" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioDevidends" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="76" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="correlationType" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="77" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="correlationShock" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="78" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioEQMoneyness" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="79" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="scenarioRecoveryRate" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="80" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="mResultLot" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="81" />
+				</bean>
+
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ratesDown" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="82" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="constantMaturity" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="83" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="IrGammaScenarioVector" />
+					<property name="columnType" value="stringZero" />
+					<property name="sourcePosition" value="84" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="IrGammaVector_MResult" />
+					<property name="columnType" value="double[7][|]" />
+					<property name="sourcePosition" value="85" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="IrGammaVector_MResultV" />
+					<property name="columnType" value="double[7][|]" />
+					<property name="sourcePosition" value="86" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="SP_Sec_Rating" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="87" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="MO_Sec_rating" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="88" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="FT_Sec_Rating" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="89" />
+				</bean>
+				
+				
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ComUnit" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="90" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ComPriceQuotation" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="91" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ComIndexName" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="92" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="AnzRatingSP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="93" />
+				</bean>
+				
+				
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="InvestmentGradeSP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="94" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="RatingBandSP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="95" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="RatingBandOtherSP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="96" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="RatingBandSecSP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="97" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="RatingAgencySP" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="98" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="creditIndexType" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="99" />
+				</bean>
+			
+			   <bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="AdjustedIrGammaVector_MResult" />
+					<property name="columnType" value="double[7][|]" />
+					<property name="sourcePosition" value="103" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="AdjustedIrGammaVector_MResultV" />
+					<property name="columnType" value="double[7][|]" />
+					<property name="sourcePosition" value="104" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="curveType" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="105" />
+				</bean>
+			
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="singleCcyType" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="106" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="expiry" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="108" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="isProxy" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="109" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="isClean" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="110" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="revenueCode" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="111" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="capitalHierarchy" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="113" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="isLeGroup" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="114" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="ccyPairOnOffShore" />
+					<property name="columnType" value="string" />
+					<property name="sourcePosition" value="115" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="pnlYtd" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="116" />
+				</bean>
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="pnlAdjustedYtd" />
+					<property name="columnType" value="doubleZero" />
+					<property name="sourcePosition" value="117" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="etoType" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="118" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="mRiskType" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="119" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="snapshot" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="120" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="pCode" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="121" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="dailyPillar" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="122" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="cfType1" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="123" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="cfType2" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="124" />
+				</bean>
+				
+				<bean class="com.quartetfs.fwk.messaging.impl.ColumnParser">
+					<property name="columnName" value="cusip" />
+					<property name="columnType" value="String" />
+					<property name="sourcePosition" value="125" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>

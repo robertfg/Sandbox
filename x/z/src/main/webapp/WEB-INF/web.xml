@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	 	 version="2.5">
+
+	<!--#########################-->
+	<!-- ActivePivot XMLA Server -->
+	<!--#########################-->
+	<servlet>
+		<servlet-name>ActivePivotXmlaServlet</servlet-name>
+		<servlet-class>com.quartetfs.biz.xmla.servlet.pivot.impl.ActivePivotXmlaServlet</servlet-class>
+		<init-param>
+			<!-- Enable binary XML encoding for the XMLA servlet -->
+			<param-name>binaryEnabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<!-- Enable data stream compression for the XMLA servlet -->
+			<param-name>compressionEnabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ActivePivotXmlaServlet</servlet-name>
+		<url-pattern>/xmla</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>QuartetXmlaServlet</servlet-name>
+		<servlet-class>com.quartetfs.biz.mondrian.xmla.impl.QuartetXmlaServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>QuartetXmlaServlet</servlet-name>
+		<url-pattern>/xmlaold</url-pattern>
+	</servlet-mapping>
+
+
+	<!--######################-->
+	<!-- Spring Configuration -->
+	<!--######################-->
+	
+	<!-- Declare the Spring application context class to use -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+
+	<!-- Declare the main @Configuration class to bootstrap -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>com.quartetfs.pivot.sandbox.cfg.SandboxConfig</param-value>
+	</context-param>
+
+	<!-- The Spring context listener bootstraps the Spring -->
+	<!-- Application Context when the Servlet is loaded.   -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+
+	<!--###############################-->
+	<!-- Spring Remoting Configuration -->
+	<!--###############################-->
+	<servlet>
+    	<servlet-name>springStreamingService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springStreamingService</servlet-name>
+    	<url-pattern>/remoting/StreamingService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springLongPollingService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springLongPollingService</servlet-name>
+    	<url-pattern>/remoting/LongPollingService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springIdGenerator</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springIdGenerator</servlet-name>
+    	<url-pattern>/remoting/IdGenerator</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springQueriesService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springQueriesService</servlet-name>
+    	<url-pattern>/remoting/QueriesService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springAdministrationService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springAdministrationService</servlet-name>
+    	<url-pattern>/remoting/AdministrationService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springLicensingService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springLicensingService</servlet-name>
+    	<url-pattern>/remoting/LicensingService</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>springDataService</servlet-name>
+    	<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>springDataService</servlet-name>
+    	<url-pattern>/remoting/DataService</url-pattern>
+	</servlet-mapping>
+
+
+	<!--##########################-->
+	<!-- Apache CXF Configuration -->
+	<!--##########################-->
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/webservices/*</url-pattern>
+	</servlet-mapping>
+
+
+	<!--################################-->
+	<!-- Spring Security Configuration  -->
+	<!--################################-->
+	
+	<!-- Configure the Spring Security filter chain  -->
+	<!-- and map it to any URL. The authentication   -->
+	<!-- and authorization mechanisms are configured -->
+	<!-- as Spring beans.                            -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+</web-app>

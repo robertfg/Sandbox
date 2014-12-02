@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<util:properties id="apSubCubeStatusUpdaterProperties"   location="classpath:resources/properties/apSubCubeStatusUpdater.${env}.properties" />
+     	
+     	<util:map id="dbMapStatus">
+     		
+     		<entry key="DONE" value="PublishedToWarehouse" />
+			<entry key="ERR"  value="PublishingToSubcubeError" />
+			
+			<entry key="done" value="PublishedToWarehouse" />
+			<entry key="err"  value="PublishingToSubcubeError" />
+			
+ 		</util:map> 
+ 		
+ 		<util:map id="varContainerMapping">
+     		
+     		<entry key="B1AL0"   value="HYPO" />
+			<entry key="VXAL0"   value="VAR_10D_AGG" />
+			<entry key="V1AL0"   value="VAR_1D_AGG" />
+			<entry key="VSAL0"   value="VAR_STRESS_AGG" />
+
+ 		</util:map> 
+	
+	   
+	<bean id="apSubCubeStatusUpdater" class="com.anz.rer.etl.polling.task.ApSubCubeStatusUpdater" >
+		<constructor-arg index="0" ref="dbMapStatus"/>
+		<constructor-arg index="1" ref="varContainerMapping"/>
+		<constructor-arg index="2" value="${maincube.directory.src}"/>
+		<constructor-arg index="3" value="${subcube.directory.src}"/>
+		<property name="dbUtils" ref="dbUtils"/>
+	</bean>
+	
+	<bean id="directoryFilePollingTask" class="com.anz.rer.etl.polling.DirectoryFilePolling">
+	        <constructor-arg index="0" value="${subcube.directory.polling.interval}"/>
+	        <constructor-arg index="1" value="1"/>
+	        <constructor-arg index="2" value="${subcube.directory.polling.location}"/>
+	        <constructor-arg index="3" value="${subcube.directory.polling.filefilter}"/>
+	 		<constructor-arg index="4" ref="apSubCubeStatusUpdater"/>
+	</bean>	 
+		
+	<bean id="subecubeStatusDirectorPolling" class="com.anz.rer.etl.polling.PollingImpl">
+			<property name="pollingTask" ref="directoryFilePollingTask"/>
+	</bean>	 
+	
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="subecubeStatusDirectorPolling" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+  
+</beans>
+   

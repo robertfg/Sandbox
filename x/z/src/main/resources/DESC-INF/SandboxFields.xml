@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Definition of the fields. Classification fields are indexed with dictionaries -->
+<!-- while measures are not indexed but have their primitive type defined.         -->
+<fields xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+	<field name="UnderlierCurrency" type="string" indexation="dictionary" />
+	<field name="UnderlierType"     type="string" indexation="dictionary" />
+	<field name="UnderlierCode"     type="string" indexation="dictionary" />
+	<field name="Desk"              type="string" indexation="dictionary" />
+	<field name="BookId"                          indexation="dictionary" />
+	<field name="IsSimulated"       type="string" indexation="dictionary" />
+	<field name="Status"            type="string" indexation="dictionary" />
+	<field name="DateBucket"        type="string" indexation="dictionary" />
+	<field name="Date"                            indexation="dictionary" />
+	<field name="ProductType"       type="string" indexation="dictionary" />
+	<field name="ProductName"       type="string" indexation="dictionary" />
+	<field name="AsOfDate"                        indexation="dictionary" />
+	<field name="HostName" 			              indexation="dictionary" />
+	<field name="delta"             type="double" />
+	<field name="pnl"               type="double" />
+	<field name="pnlDelta"          type="double" />
+	<field name="pnlVega"           type="double" />
+	<field name="gamma"             type="double" />
+	<field name="vega"              type="double" />
+	<field name="theta"             type="double" />
+	<field name="rho"               type="double" />
+	<field name="productBaseMtm"    type="double" />
+	<field name="productId"         type="int" />
+</fields>

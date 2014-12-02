@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    
+   
+   <bean id="gammaBasisVectorConfig" class="com.anz.rer.etl.vectorizer.VectorConfig">
+	    <property name="columnToVectorize">
+	    	<list>
+	    		<value>22</value> <!-- scenario -->
+	    		<value>28</value> <!-- mresult  -->
+	    		<value>29</value> <!-- mresultv -->
+	    	</list>
+	    </property>
+	    <property name="columnKeyId">
+	    	<list>
+	    		<value>1</value>
+				<value>8</value>
+	    		<value>15</value> 
+	   	 		<value>20</value>
+	    		<value>17</value>
+				<value>22</value>
+				
+	   
+	    	</list>
+	    </property>
+	    
+	    <property name="columnToExtract">
+	    	<list>
+	    		<value>0</value>
+	    		<value>1</value>
+	    		<value>2</value>
+	    		<value>3</value>
+	    		<value>4</value>
+	    		<value>5</value>
+	    		<value>6</value>
+	    		<value>7</value>
+	    		<value>8</value>
+	    		<value>9</value>
+	    		<value>10</value>
+	    		<value>11</value>
+	    		<value>12</value>
+	    		<value>13</value>
+	    		<value>14</value>
+	    		<value>15</value>
+	    		<value>16</value>
+	    		<value>17</value>
+	    		<value>18</value>
+	    		<value>19</value>
+	    		<value>20</value>
+	    		<value>21</value>
+	    		<value>22</value>
+	    		<value>23</value>
+	    		<value>24</value>
+	    		<value>25</value>
+	    		<value>26</value>
+	    		<value>27</value>
+	    		<value>28</value>
+	    		<value>29</value>
+	    		<value>30</value>
+	    		<value>31</value>
+	    		<value>31</value>
+	    		<value>33</value>
+	    		<value>34</value>
+	    	</list>	
+	    </property>
+	     
+	    <property name="vectorSize" value="7"/>
+	    <property name="vectorMapping">
+	    	 <map>
+          			<entry key="-25 bp"  value="0" />
+					<entry key="-10 bp"  value="1" />
+					<entry key="-5 bp"   value="2" />
+					<entry key="Base"    value="3" />
+					<entry key="+5 bp"   value="4" />
+					<entry key="+10 bp"  value="5" />
+					<entry key="+25 bp"  value="6" />
+       		 </map>
+	    </property> 
+	    
+	    <property name="vectorKeyColum" value="22"/>
+	    
+<!--         <property name="columnFormatting">   -->
+<!--     		<map> -->
+<!--    	         <entry key="4"   value="yyyyMMdd" />  -->
+<!--     		</map>    -->
+<!--         </property>   -->
+   		<property name="mandatory">
+   			<list>
+   				<value>0</value>
+   			</list>
+  		</property>
+  </bean>
+    
+    
+    <bean id="fxoDeltaGammaVectorConfig" class="com.anz.rer.etl.vectorizer.VectorConfig">
+	    <property name="columnToVectorize">
+	    	<list>
+	    		<value>11</value>
+	    		<value>28</value>
+	    		<value>29</value>
+	    	</list>
+	    </property>
+	    <property name="columnKeyId">
+	    	<list>
+	    		<value>1</value>
+	    		<value>6</value>
+	    		<value>17</value>
+	    	</list>
+	    </property>
+	    
+	    <property name="columnToExtract">
+	    	<list>
+	    		<value>0</value>
+	    		<value>1</value>
+	    		<value>2</value>
+	    		<value>3</value>
+	    		<value>4</value>
+	    		<value>5</value>
+	    		<value>6</value>
+	    		<value>7</value>
+	    		<value>8</value>
+	    		<value>9</value>
+	    		<value>10</value>
+	    		<value>11</value>
+	    		<value>12</value>
+	    		<value>13</value>
+	    		<value>14</value>
+	    		<value>15</value>
+	    		<value>16</value>
+	    		<value>17</value>
+	    		<value>18</value>
+	    		<value>19</value>
+	    		<value>20</value>
+	    		<value>21</value>
+	    		<value>22</value>
+	    		<value>23</value>
+	    		<value>24</value>
+	    		<value>25</value>
+	    		<value>26</value>
+	    		<value>27</value>
+	    		<value>28</value>
+	    		<value>29</value>
+	    		<value>30</value>
+	    		<value>31</value>
+	    		<value>31</value>
+	    		<value>33</value>
+	    		<value>34</value>
+	    	</list>	
+	    </property>
+   		<property name="mandatory">
+   			<list>
+   				<value>0</value>
+   			</list>
+  		</property>
+  		
+  		<property name="vectorKeyColum" value="11"/>
+  		<property name="vectorSize" value="30"/>
+  	    <property name="vectorMapping">
+	    	 <map>
+          		<entry key="-20.00%" value="0" />
+				<entry key="-15.00%" value="1" />
+				<entry key="-12.50%" value="2" />
+				<entry key="-10.00%" value="3" />
+				<entry key="-7.50%" value="4" />
+				<entry key="-5.00%" value="5" />
+				<entry key="-4.50%" value="6" />
+				<entry key="-4.00%" value="7" />
+				<entry key="-3.50%" value="8" />
+				<entry key="-3.00%" value="9" />
+				<entry key="-2.50%" value="10" />
+				<entry key="-2.00%" value="11" />			
+				<entry key="-1.50%" value="12" />			
+				<entry key="-1.00%" value="13" />				
+				<entry key="-0.50%" value="14" />			
+				<entry key="0.50%" value="15" />			
+				<entry key="1.00%" value="16" />			
+				<entry key="1.50%" value="17" />			
+				<entry key="2.00%" value="18" />			
+				<entry key="2.50%" value="19" />			
+				<entry key="3.00%" value="20" />			
+				<entry key="3.50%" value="21" />				
+				<entry key="4.00%" value="22" />				
+				<entry key="4.50%" value="23" />			
+				<entry key="5.00%" value="24" />
+				<entry key="7.50%" value="25" />
+				<entry key="10.00%" value="26" />
+				<entry key="12.50%" value="27" />
+				<entry key="15.00%" value="28" />
+				<entry key="20.00%" value="29" />				
+			 </map>
+	    </property> 
+  </bean>
+    
+    <bean id="vectorCsvReaderTaskConfig" class="com.anz.rer.etl.config.CsvReaderTaskConfig">
+    	<property name="skipFirstLine" value="false"/>
+    	<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)"/>
+    	<property name="columnDelimeter" value=","/>
+    	<property name="ignoreString" value="?"/>
+    	<property name="csvPartition" value="20000"/>
+    </bean>
+  </beans>

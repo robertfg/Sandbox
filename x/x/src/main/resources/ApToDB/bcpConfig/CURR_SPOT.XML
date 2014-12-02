@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<BCPFORMAT xmlns="http://schemas.microsoft.com/sqlserver/2004/bulkload/format" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+ <RECORD>
+  <FIELD ID="1" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="8" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="2" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="25" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="3" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="25" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="4" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="50" COLLATION="Latin1_General_CI_AS"/>
+  <FIELD ID="5" xsi:type="CharTerm" TERMINATOR=";" MAX_LENGTH="20" COLLATION="Latin1_General_CI_AS"/>
+ </RECORD>
+
+ <ROW>
+  <COLUMN SOURCE="1" NAME="COBDate" 		 xsi:type="DATE"        CSVSOURCE="2" FORMAT="yyyyMMdd|yyyyMMdd"/>
+  <COLUMN SOURCE="2" NAME="BaseCurrency" 	 xsi:type="CONSTANTS"   CSVSOURCE="0" VALUE="AUD"/>
+  <COLUMN SOURCE="3" NAME="ForeignCurrency"  xsi:type="SQLVARYCHAR" CSVSOURCE="0" />
+  <COLUMN SOURCE="4" NAME="Rate"			 xsi:type="SQLVARYCHAR" CSVSOURCE="8" />
+  <COLUMN SOURCE="5" NAME="SourceSystem" 	 xsi:type="CONSTANTS"   CSVSOURCE="8" VALUE="Murex"/>
+ </ROW>
+
+</BCPFORMAT>
+
+ 
+
+
+ 

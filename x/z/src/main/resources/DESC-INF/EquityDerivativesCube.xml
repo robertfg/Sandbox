@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pivotDescription xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+
+	<!-- Selection of the BITMAP aggregate provider -->
+	<aggregatorStorage pluginKey="BITMAP">
+		<properties>
+			<!-- Disable parallel aggregation for simple scalar measures -->
+			<entry key="parallelAggregation" value="false" />
+			<!-- Performance timings are off by default. Enable them for fine tuning. -->
+			<entry key="printTimings" value="false" />
+		</properties>
+	</aggregatorStorage>
+
+	<!-- Cache the most recently accessed {location, measure} pairs -->
+	<aggregatesCacheSize>-1</aggregatesCacheSize>
+
+	<!-- Definition of the dimensions -->
+	<dimensions>
+
+		<dimension name="Underlyings">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+			</properties>
+			<level name="UnderlierCurrency">
+				<comparator pluginKey="Custom">
+					<order name="firstObjects">
+						<value>EUR</value>
+						<value>GBP</value>
+						<value>USD</value>
+						<value>JPY</value>
+					</order>
+				</comparator>
+			</level>
+			<level name="UnderlierType" />
+			<level name="UnderlierCode" />
+		</dimension>
+
+		<dimension name="Host" isAllMembersEnabled="true">
+			<level name="HostName" />
+		</dimension>
+
+		<dimension name="Bookings">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+			</properties>
+			<level name="Desk" />
+			<level name="BookId" />
+		</dimension>
+
+		<dimension name="BookingStatus">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+			</properties>
+			<level name="IsSimulated" />
+			<level name="Status" />
+		</dimension>
+
+		<dimension name="Products">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+			</properties>
+			<level name="ProductType" />
+			<level name="ProductName" />
+		</dimension>
+
+		<dimension name="HistoricalDates">
+			<properties>
+				<entry key="DimensionType" value="time" />
+				<entry key="IsAllMembersEnabled" value="false" />
+			</properties>
+			<level name="AsOfDate">
+				<properties>
+					<entry key="LevelType" value="time" />
+				</properties>
+				<!-- add comparator -->
+				<comparator pluginKey="ReverseOrder" />
+			</level>
+		</dimension>
+
+
+		<!-- Standard time buckets, bucketing performed at insertion -->
+		<dimension name="TimeBucket">
+			<properties>
+				<entry key="DimensionType" value="time" />
+			</properties>
+			<level name="DateBucket">
+				<!-- add comparator -->
+				<comparator pluginKey="Custom">
+					<order name="firstObjects">
+						<value>1D</value>
+						<value>2D</value>
+						<value>3D</value>
+						<value>1W</value>
+						<value>2W</value>
+						<value>3W</value>
+						<value>1M</value>
+						<value>2M</value>
+						<value>3M</value>
+						<value>6M</value>
+						<value>9M</value>
+						<value>1Y</value>
+						<value>2Y</value>
+						<value>5Y</value>
+					</order>
+				</comparator>
+			</level>
+			<!-- The Value Date level is the field Date -->
+			<level name="Value Date" property="Date">
+				<properties>
+					<entry key="LevelType" value="time" />
+				</properties>
+			</level>
+		</dimension>
+		
+		<!-- Dynamic time buckets, bucketing performed at query time.  -->
+		<!-- This requires the cooperation of bucketing post processor. -->
+		<dimension name="TimeBucketDynamic" pluginKey="TIME_BUCKET"/>
+
+	</dimensions>
+
+	<!-- Definition of the measures -->
+	<measures>
+		<measure name="delta" folder="Sensitivities" aggregationFunctions="SUM" />
+		<measure name="gamma" folder="Sensitivities" aggregationFunctions="SUM" />
+		<measure name="vega"  folder="Sensitivities" aggregationFunctions="SUM" />
+		<measure name="theta" folder="Sensitivities" aggregationFunctions="SUM" />
+		<measure name="rho"   folder="Sensitivities" aggregationFunctions="SUM" />
+
+		<!-- The pv measure is an alias of productBaseMtm this measure will be 
+			seen as pv in your front end notice that you should link this measure with 
+			property attribute to the available field productBaseMtm. -->
+		<measure name="pv" folder="PnL" property="productBaseMtm" aggregationFunctions="SUM">
+		
+			<!-- This post processor dynamically buckets an underlying measure -->
+			<!-- It works together with a dynamic bucket dimension.            -->
+			<postProcessor pluginKey="TIME_BUCKETER">
+				<properties>
+					<entry key="id" value="bucket.SUM" />
+					<entry key="bucketDimension" value="TimeBucketDynamic" />
+					<entry key="bucketedLevel" value="Value Date@TimeBucket" />
+					<entry key="underlyingMeasures" value="pv.SUM" />
+					<entry key="continuousQueryHandlerKeys" value="UPDATE_ANALYSIS_DIMENSION" />
+				</properties>
+			</postProcessor>
+		
+			<!-- The pv.UnderlyingsRatio measure is a post-processed measure thanks 
+				to the formula aggregatedValue[pv.SUM],parentAggregatedValue[pv.SUM::1],/ 
+				which is a Reverse Polish notation. The goal of this post-processed measure 
+				is to figure out the ratio of a child to its parent against the dimension 
+				1 (thanks to the operand parentAggregatedValue) -->
+			<postProcessor pluginKey="FORMULA">
+				<properties>
+					<entry key="id" value="UnderlyingsRatio" />
+					<entry key="formula" value="aggregatedValue[pv.SUM],parentAggregatedValue[pv.SUM::Underlyings],/" />
+				</properties>
+			</postProcessor>
+
+		</measure>
+
+		<measure name="pnl" folder="PnL" aggregationFunctions="SUM">
+		
+			<!-- This post processor dynamically buckets an underlying measure -->
+			<!-- It works together with a dynamic bucket dimension.            -->
+			<postProcessor pluginKey="TIME_BUCKETER">
+				<properties>
+					<entry key="id" value="bucket.SUM" />
+					<entry key="bucketDimension" value="TimeBucketDynamic" />
+					<entry key="bucketedLevel" value="Value Date@TimeBucket" />
+					<entry key="underlyingMeasures" value="pnl.SUM" />
+					<entry key="continuousQueryHandlerKeys" value="UPDATE_ANALYSIS_DIMENSION" />
+				</properties>
+			</postProcessor>
+		
+			<postProcessor pluginKey="ALLMEMBER_HIDE">
+				<properties>
+					<entry key="id" value="ALLMEMBER_HIDE" />
+					<entry key="dimension" value="Underlyings" />
+					<entry key="level" value="UnderlierCurrency" />
+					<entry key="underlyingMeasures" value="pnl.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="CONTINUOUS_FOREX">
+				<properties>
+					<entry key="id" value="CONTINUOUS_FOREX" />
+					<entry key="leafLevels" value="UnderlierCurrency@Underlyings" />
+					<!-- The handlers to which the post processor is sensitive can be set here (or in the PostProcessor class) -->
+					<entry key="continuousQueryHandlerKeys" value="STORED, CONTINUOUS_FOREX_HANDLER" />
+					<entry key="underlyingMeasures" value="pnl.SUM" />
+				</properties>
+			</postProcessor>
+		</measure>
+		<measure name="pnlDelta" folder="PnL" aggregationFunctions="SUM">
+			<postProcessor pluginKey="TIME_BUCKETER">
+				<properties>
+					<entry key="id" value="bucket.SUM" />
+					<entry key="bucketDimension" value="TimeBucketDynamic" />
+					<entry key="bucketedLevel" value="Value Date@TimeBucket" />
+					<entry key="underlyingMeasures" value="pnlDelta.SUM" />
+					<entry key="continuousQueryHandlerKeys" value="UPDATE_ANALYSIS_DIMENSION" />
+				</properties>
+			</postProcessor>
+		</measure>
+		<measure name="pnlVega" folder="PnL" aggregationFunctions="SUM">
+			<postProcessor pluginKey="TIME_BUCKETER">
+				<properties>
+					<entry key="id" value="bucket.SUM" />
+					<entry key="bucketDimension" value="TimeBucketDynamic" />
+					<entry key="bucketedLevel" value="Value Date@TimeBucket" />
+					<entry key="underlyingMeasures" value="pnlVega.SUM" />
+					<entry key="continuousQueryHandlerKeys" value="UPDATE_ANALYSIS_DIMENSION" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- The productId measure below is used to enrich the drillthrough, notice 
+			that it hasn't an aggregationFunctions -->
+		<measure name="productId" />
+	</measures>
+
+
+	<sharedContexts>
+
+		<!-- Hard limit for the number of rows returned by drillthrough queries -->
+		<drillthroughMaxRows maxRows="10000" />
+
+		<!-- Drillthrough customization, the column projectionId is hidden and 
+			the column objectKey is sorted and set as first column -->
+		<drillthroughProperties>
+			<headersComparator pluginKey="Custom">
+				<order name="firstObjects">
+					<value>objectKey</value>
+					<value>projectionId</value>
+				</order>
+			</headersComparator>
+			<!-- <hiddenColumns> -->
+			<!-- <column>projectionId</column> -->
+			<!-- </hiddenColumns> -->
+			<postProcessedColumns>
+				<column pluginKey="DrillthroughColumn" >
+					<properties>
+						<entry key="id" value="delta + gamma" />
+						<entry key="c1" value="delta" />
+						<entry key="c2" value="gamma" />
+					</properties>
+				</column>
+			 </postProcessedColumns>
+		</drillthroughProperties>
+
+
+		<!-- Contextual configuration of the MDX engine -->
+		<mdxContext>
+			<formatters>
+				<!-- Measure formatting configuration -->
+				<formatter uniqueName="[Measures].[update.TIMESTAMP]"     plugin="DATE" pattern="HH:mm:ss" />
+				<formatter uniqueName="[Measures].[delta.SUM]"            plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnl.SUM]"              plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnl.bucket.SUM]"       plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnlDelta.SUM]"         plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnlDelta.bucket.SUM]"  plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnlVega.SUM]"          plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnlVega.bucket.SUM]"   plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[gamma.SUM]"            plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[vega.SUM]"             plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[theta.SUM]"            plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[rho.SUM]"              plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pv.SUM]"               plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pv.bucket.SUM]"        plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pv.UnderlyingsRatio]"  plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnl.ALLMEMBER_HIDE]"   plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+				<formatter uniqueName="[Measures].[pnl.CONTINUOUS_FOREX]" plugin="DOUBLE" pattern="#,###.00;-#,###.00" />
+
+				<!-- Level member formatting configuration -->
+				<formatter uniqueName="[TimeBucket].[Value Date]" plugin="DATE" pattern="dd-MM-yyyy" />
+				<formatter uniqueName="[HistoricalDates].[AsOfDate]" plugin="DATE" pattern="dd-MMM-yyyy" />
+			</formatters>
+
+			<!-- Restrict formula evaluation on the crossjoined tuples existing in the 
+				cube, instead of all possible tuples. -->
+			<aggressiveFormulaEvaluation>true</aggressiveFormulaEvaluation>
+
+			<lightCrossJoinEnabled>true</lightCrossJoinEnabled>
+			
+			<!-- Add named set. -->
+			<additionalProperties>
+			
+				<!-- The name of the set -->
+				<entry key="set.top2Underlyings.name" value="[Top2Underlyings]"/>
+				
+				<!-- The caption of the set -->
+				<entry key="set.top2Underlyings.set_caption" value="Top two of underlyings" />
+				
+				<!-- The description of the set -->
+				<entry key="set.top2Underlyings.description" value="The two elements of underlyings which have the highest value"/>
+    			
+    			<!-- The expression of the set -->
+    			<entry key="set.top2Underlyings.expression" value="TopCount([Underlyings].[ALL].[AllMember].Children, 2, [Measures].[contributors.COUNT])"/>
+    			
+			</additionalProperties>
+		</mdxContext>
+
+		<!-- Query maximum execution time (before timeout cancellation) -->
+		<queriesTimeLimit seconds="30" />
+	</sharedContexts>
+
+</pivotDescription>

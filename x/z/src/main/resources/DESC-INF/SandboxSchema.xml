@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<schemaDescription xmlns:p="http://jaxb.dev.java.net/array" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		xsi:noNamespaceSchemaLocation="../activepivot-types.xsd">
+
+	<!-- Selection of the custom "PNL" calculator implementation -->
+	<calculator pluginKey="PNL" />
+	
+	<!-- Selection of the column indexer -->
+	<indexer pluginKey="COLUMN">
+		<properties>
+			<!-- We define column groups for correlated columns -->
+			<entry key="columnGroup.UnderlierGroup" value="UnderlierCurrency,UnderlierType,UnderlierCode"/>
+			<entry key="columnGroup.BookingGroup"   value="Desk,BookId"/>
+			<entry key="columnGroup.ProductGroup"   value="ProductType,ProductName,productId"/>
+			<entry key="columnGroup.TimeGroup"      value="Date,DateBucket"/>
+			<entry key="columnGroup.StatusGroup"    value="IsSimulated,Status"/>
+		</properties>
+	</indexer>
+
+
+	<!-- We specify the type of the key so the indexer can optimize its data structure -->
+	<key type="long" />
+	
+
+	<!-- Import field definitions from an imported resource -->
+	<fields>
+		<import resource="DESC-INF/SandboxFields.xml" />
+	</fields>
+
+	<!-- List of the ActivePivot instances within that schema -->
+	<activePivots>
+		<activePivot id="EquityDerivativesCube" >
+			<pivotDescription resource="DESC-INF/EquityDerivativesCube.xml" />
+		</activePivot>
+		<distributedActivePivot>
+			<Id>EquityDerivativesCubeDist</Id>
+			<clusterId>EquityDerivativesCubeDist</clusterId>
+			<distributionType>HORIZONTAL</distributionType>
+			<underlyingPivotId>EquityDerivativesCube</underlyingPivotId>
+			<properties>
+				<entry key="distributingField"	value="HostName" />
+				<entry key="protocolPath"		value="jgroups-protocols/protocol-udp.xml" />
+			</properties>
+		</distributedActivePivot>
+		<activePivot id="EquityDerivativesCubeSmall">
+			<pivotDescription resource="DESC-INF/EquityDerivativesCubeSmall.xml" />
+		</activePivot>
+		<activePivot id="EquityDerivativesCubeEURGBP">
+			<pivotDescription resource="DESC-INF/EquityDerivativesCube.xml" />
+			
+			<!-- A filter defined on the currency field that filters out -->
+			<!-- all the currencies that are not EUR or GBP.             -->
+			<filter>
+				<in expression="UnderlierCurrency">
+					<element><value xsi:type="xs:string">EUR</value></element>
+					<element><value xsi:type="xs:string">GBP</value></element>
+				</in>
+			</filter>
+		</activePivot>
+	</activePivots>
+
+</schemaDescription>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+   <util:properties id="apEquityDeltaGammaProperties"   location="classpath:resources/properties/ApEquityDeltaGamma.${env}.properties" />
+ 
+
+	<bean id="apEquityDeltaGammaExtractToDB" class="com.anz.rer.etl.csvloader.CsvLoader">
+		<constructor-arg index="0" ref="mssqlDataSource" />
+		<constructor-arg index="1" value="0" /> <!-- number of thread processor -->
+		
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value="," />
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" /> <!-- (\r\n|\r|\n|\n\r) combination for crlf -->
+		<property name="insertThreshold" value="2500" />
+		<property name="fileResolver" ref="apEquityDeltaGammaExtractFileResolver" />
+		
+		<property name="tableName" value="Staging.EQUITYDELTAGAMM" />
+		<property name="postProcSql" value="{call [DW].[LoadEquityTradeDeltaGamma]}" />
+
+		<property name="csvSourceLength" value="6" />
+		<property name="valiDateSql">
+		  <value><![CDATA[select JobID from etl.vw_Job where JobTypeID in(12) and Status in('Not Started','Failed','No Data')]]></value>
+		</property>
+		
+		<property name="successStatus" value="Complete"/> 
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="apEquityDeltaGamma" />
+		<property name="bussDate" value="3" />
+		<property name="bussDateSplitDelimeter" value="_" />
+		  
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="apEquityDeltaGammaExtractFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="apEquityDeltaGammaProperties" />
+	</bean>
+
+     
+    <bean id="apEquityDeltaGammaCsvToTableProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="apEquityDeltaGammaProperties" />
+    	<property name="fileProcessor" ref="apEquityDeltaGammaExtractToDB" />
+    </bean>
+    
+   
+    <bean id="apEquityDeltaGammaExtractDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="apEquityDeltaGammaCsvToTableProcessor" />
+	    <property name="interval"   	value="20000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apEquityDeltaGammaExtractDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

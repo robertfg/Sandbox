@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd ">
+
+	<!-- Properties -->
+
+	<bean id="limitFileTriggerProperties" factory-bean="globalPropertiesSolver"
+		factory-method="solveProperties">
+		<constructor-arg>
+			<util:properties location="classpath:properties/limit/LimitFileWatcher.properties" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="LimitSourceProperties" factory-bean="globalPropertiesSolver"
+		factory-method="solveProperties">
+		<constructor-arg>
+			<util:properties location="classpath:properties/limit/LimitSource.properties" />
+		</constructor-arg>
+	</bean>
+
+
+	<!-- Directory watcher -->
+	<bean id="limitFileWatcher" class="com.quartetfs.pivot.anz.limits.parsing.LimitCSVWatcher" />	
+	<!-- init FileTrigger -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="limitFileWatcher" />
+		<property name="targetMethod" value="init" />
+		<property name="arguments" ref="limitFileTriggerProperties" />
+	</bean>
+
+	<!-- Source parsing the VR files -->
+	<bean id="LimitSource" class="com.quartetfs.fwk.messaging.impl.CSVSource">
+		<property name="CSVWatchers">
+			<map>
+				<entry key-ref="limitFileWatcher" value-ref="LimitTranslator" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- start file watch -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="LimitSource" />
+		<property name="targetMethod" value="init" />
+		<property name="arguments" ref="LimitSourceProperties" />		
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="LimitSource" />
+		<property name="targetMethod" value="addSourceListener" />
+		<property name="arguments" ref="limitDataFeeder" />
+	</bean>
+
+	<!-- start file watch -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="LimitSource" />
+		<property name="targetMethod" value="start" />
+	</bean>
+</beans>

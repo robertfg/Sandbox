@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:properties id="apFileVectorProperties"   location="classpath:resources/properties/apFileVectorizer.${env}.properties" />
+
+	<bean id="apFileVectorFileProccesor" class="com.anz.rer.etl.vectorizer.VectorizeFileProcessor">
+		<constructor-arg index="0" value="8" /> <!-- number of thread processor -->
+		<constructor-arg index="1" ref="lookUpCache"  />
+		
+		
+		<property name="psrVectorConfigMapping">
+			<map>
+				<entry key="GAMMA_BASIS" 	value="gammaBasisVectorConfig"/>
+				<entry key="IR_GAMMA"    	value="irGammaBasisVectorConfig"/>
+				<entry key="FXO_DELGAMMA" value="fxoDeltaGammaVectorConfig"/>
+			</map>
+		</property>
+		
+		<property name="vectorConfigurations">
+			<map>
+				<entry key="gammaBasisVectorConfig"    value-ref="gammaBasisVectorConfig"/>
+				<entry key="irGammaBasisVectorConfig"  value-ref="gammaBasisVectorConfig"/>
+				<entry key="fxoDeltaGammaVectorConfig" value-ref="fxoDeltaGammaVectorConfig"/>
+			</map>
+		</property>
+		
+		
+		<property name="psrTransposeConfigMapping">
+			<map>
+				<entry key="GAMMA_BASIS"    value="gammaBasisTransposeConfig"/>
+				<entry key="IR_GAMMA"       value="irGammaBasisTransposeConfig"/>
+				<entry key="FXO_DELGAMMA"   value="fxoDeltaGammaTransposeConfig"/>
+				
+				
+			</map>
+		</property>
+		
+		<property name="transposeConfigurations">
+			<map>
+				<entry key="gammaBasisTransposeConfig"    value-ref="gammaBasisTransposeConfig"/>
+				<entry key="irGammaBasisTransposeConfig"  value-ref="gammaBasisTransposeConfig"/>
+				<entry key="fxoDeltaGammaTransposeConfig" value-ref="fxoDeltaGammaTransposeConfig"/>
+				  
+			</map>
+		</property>
+		
+		<property name="csvReaderTaskConfig" ref="vectorCsvReaderTaskConfig"/>
+		<property name="destDirectory" value="${etl.csvToTable.src.fileName.destination}" />
+    </bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="apFileVectorFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="apFileVectorProperties" />
+	</bean>
+
+     
+    <bean id="apFileVectorizerDirectoryProcessor" class="com.anz.rer.etl.vectorizer.VectorDirectoryProcessor">
+    	<constructor-arg index="0" ref="apFileVectorProperties" />
+   		<constructor-arg index="1" ref="lookUpCache"  />
+   		<constructor-arg index="2" ref="apFileCsvDirectoryProcessor"  />
+   		  		
+   		<property name="fileProcessor" ref="apFileVectorFileProccesor" />
+    	<property name="dateLoc" value="4"/>
+    	<property name="dateLocSeparator" value="#"/>
+    </bean>
+    
+
+    <bean id="apFileVectorizerDirectoryWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="apFileVectorizerDirectoryProcessor" />
+	    <property name="interval"   	value="8000"/> 
+    </bean>
+ 
+ 
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apFileVectorizerDirectoryWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+ 
+
+</beans>
+	
+	

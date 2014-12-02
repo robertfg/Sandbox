@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<managerDescription xmlns:p="http://jaxb.dev.java.net/array"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="activepivot-types.xsd">
+
+	<!-- Composition of the ActivePivot ANZ catalog -->
+	<catalogs>
+		<catalog id="ANZ">
+			<activePivot id="MarketRiskCube" />
+		</catalog>
+	</catalogs>
+	<!-- List of the schemas handled by this manager -->
+	<schemas>
+		<schema id="MarketRiskSchema">
+			<schemaDescription resource="DESC-INF/MarketRiskSchema.xml"/>
+		</schema>
+	</schemas>
+</managerDescription>

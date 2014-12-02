@@ -1,0 +1,28 @@
+package com.quartetfs.fwk.messaging.impl;
+
+import com.quartetfs.fwk.QuartetPluginValue;
+import com.quartetfs.fwk.QuartetRuntimeException;
+import com.quartetfs.fwk.messaging.IFieldParser;
+import com.quartetfs.fwk.types.impl.PluginValue;
+
+@QuartetPluginValue(interfaceName = "com.quartetfs.fwk.messaging.IFieldParser")
+public class AnzLongFieldParser extends PluginValue implements IFieldParser<Long>{
+
+	private static final long serialVersionUID = 6741362254380087221L;
+
+	@Override
+	public String description() {
+		return "Parser for long field";
+	}
+
+	@Override
+	public Object key() {
+		return "ANZLong"; 
+	}
+
+	@Override
+	public Long parse(CharSequence charsequence) throws QuartetRuntimeException {
+		return 0L;
+	}
+
+}

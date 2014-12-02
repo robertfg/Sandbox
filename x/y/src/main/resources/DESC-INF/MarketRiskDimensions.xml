@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dimensions xmlns:p="http://jaxb.dev.java.net/array"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="activepivot-types.xsd">
+
+	<dimension name="Container">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Container" property="container" />
+	</dimension>
+  
+	<dimension name="COB Date">
+		<properties>
+			<entry key="DimensionType" value="time" />
+			<entry key="IsAllMembersEnabled" value="false" />
+		</properties>
+		<level name="COB Date" property="M_DATE">
+			<comparator pluginKey="ReverseOrder" />
+		</level>
+	</dimension>
+
+	<dimension name="Base Currency">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="false" />
+		</properties>
+		<level name="Base Currency" property="M_PL_CUR" />
+	</dimension>
+
+
+	<dimension name="Risk Portfolio Hierarchy">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Tier 1" property="Level1" />
+		<level name="Tier 2" property="Level2" />
+		<level name="Tier 3" property="Level3" />
+		<level name="Tier 4" property="Level4" />
+		<level name="Tier 5" property="Level5" />
+		<level name="Tier 6" property="Level6" />
+		<level name="Tier 7" property="Level7" />
+		<level name="Tier 8" property="Level8" />
+		<level name="Tier 9" property="Level9" />
+		<level name="Tier 10" property="Level10" />
+		<level name="Tier 11" property="Level11" />
+		<level name="Tier 12" property="Level12" />
+		
+		<!-- <level name="Tier 13" property="Level13" />
+		<level name="Tier 14" property="Level14" />
+		<level name="Tier 15" property="Level15" />
+		<level name="Tier 16" property="Level16" />
+		<level name="Tier 17" property="Level17" />
+		<level name="Tier 18" property="Level18" />
+		<level name="Tier 19" property="Level19" />
+		<level name="Tier 20" property="Level20" /> -->
+	</dimension>
+
+	<dimension name="Geography Hierarchy">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Tier 1" property="GeoL1" />
+		<level name="Tier 2" property="GeoL2" />
+		<level name="Tier 3" property="GeoL3" />
+		<level name="Tier 4" property="GeoL4" />
+		<level name="Tier 5" property="GeoL5" />
+		<level name="Tier 6" property="GeoL6" />
+		<level name="Tier 7" property="GeoL7" />
+		<level name="Tier 8" property="GeoL8" />
+	</dimension>
+
+
+
+	<dimension name="Product Hierarchy">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Product Family" property="M_TRN_FMLY" />
+		<level name="Product Group" property="M_TRN_GRP" />
+		<level name="Product Type" property="M_TRN_TYPE" />
+	</dimension>
+
+
+<!--
+	<dimension name="Currency Pair Hierarchy">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Tier 1" property="CurrPairL1" />
+		<level name="Tier 2" property="CurrPairL2" />
+		<level name="Tier 3" property="CurrPairL3" />
+		<level name="Tier 4" property="CurrPairL4" />
+		<level name="Tier 5" property="CurrPairL5" />
+	</dimension>
+-->
+
+	<!-- VAR Dimensions -->
+
+	<dimension name="VaR-Confidence Level" pluginKey="VAR_CONFIDENCE_LEVEL_DIM" />
+
+	<dimension name="VaR-Scenario Nr" pluginKey="VAR_SCENARIO_DIM">
+		<properties>
+			<comparatorDescription pluginKey="ReverseOrder" />
+		</properties>
+	</dimension>
+
+	<dimension name="VaR-Scenario Date" pluginKey="VAR_SCENARIO_DATE">
+		<properties>
+			<comparatorDescription pluginKey="ReverseOrder" />
+			<entry key="varDateType" value="VARDATES" /> 
+		</properties>
+	</dimension>
+
+	<dimension name="Grp:EQ Type">
+		<properties> 
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:EQ Type" property="equityType" />
+	</dimension>
+
+	<dimension name="Grp:EQ Region">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:EQ Region" property="equityRegion">
+			<comparator pluginKey="Custom">
+				<order name="firstObjects">
+					<value>Australia</value>
+					<value>Asia</value>
+					<value>Global</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+
+	<dimension name="Grp:EQ Tier">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:EQ Tier" property="equityTier" />
+	</dimension>
+
+	<dimension name="Grp:EQ Full Name">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:EQ Full Name" property="equityLongDesc" />
+	</dimension>
+
+	<dimension name="Underlying-EQ">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Equity Code" property="equity" />
+	</dimension>
+
+<!-- 	<dimension name="Grp:CCY Precious Metals/NonPM"> -->
+<!-- 		<properties> -->
+<!-- 			<entry key="DimensionType" value="regular" /> -->
+<!-- 			<entry key="IsAllMembersEnabled" value="true" /> -->
+<!-- 		</properties> -->
+<!-- 		<level name="Grp:CCY Precious Metals/NonPM" property="CurrencyGlobalPrec" /> -->
+<!-- 	</dimension> -->
+
+<!-- 	<dimension name="Grp:CCY Major/Minor"> -->
+<!-- 		<properties> -->
+<!-- 			<entry key="DimensionType" value="regular" /> -->
+<!-- 			<entry key="IsAllMembersEnabled" value="true" /> -->
+<!-- 		</properties> -->
+<!-- 		<level name="Grp:CCY Major/Minor" property="CurrencyMajMin" /> -->
+<!-- 	</dimension> -->
+
+	<dimension name="Grp:CCY Group (Underlying CCY)">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:CCY Group (Underlying CCY)" property="CurrencyGroup" />
+	</dimension>
+
+	<dimension name="Grp:CCY Family - FXO (Underlying CCY)">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:CCY Family - FXO (Underlying CCY)" property="CurrencyFamily" />
+	</dimension>
+
+
+<!-- 	<dimension name="Grp:CCY Onshore/Offshore"> -->
+<!-- 		<properties> -->
+<!-- 			<entry key="DimensionType" value="regular" /> -->
+<!-- 			<entry key="IsAllMembersEnabled" value="true" /> -->
+<!-- 		</properties> -->
+<!-- 		<level name="Grp:CCY Onshore/Offshore" property="CurrencyOnOff"> -->
+<!-- 			<comparator pluginKey="Custom"> -->
+<!-- 				<order name="firstObjects"> -->
+<!-- 					<value>Group: Major ccys</value> -->
+<!-- 					<value>Group: CNY ccys</value> -->
+<!-- 					<value>Group: IDR ccys</value> -->
+<!-- 					<value>Group: INR ccys</value> -->
+<!-- 					<value>Group: KRW ccys</value> -->
+<!-- 					<value>Group: MYR ccys</value> -->
+<!-- 					<value>Group: PHP ccys</value> -->
+<!-- 					<value>Group: TWD ccys</value> -->
+<!-- 					<value>Group: VND ccys</value> -->
+<!-- 				</order> -->
+<!-- 			</comparator> -->
+<!-- 		</level> -->
+<!-- 	</dimension> -->
+
+
+	<dimension name="Underlying-CCY">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Currency Code" property="Currency">
+			<comparator pluginKey="Custom">
+				<order name="lastObjects">
+					<value>ALL</value>
+					<value>ANZAC</value>
+					<value>Asian</value>
+					<value>Australasian</value>
+					<value>European</value>
+					<value>Percious Metals</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+
+	<dimension name="Underlying-CCY PAIR">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Currency Pair" property="CurrencyPair" />
+	</dimension>
+
+	<dimension name="Underlying-IR Curve">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Underlying-IR Curve" property="IRCurve" />
+	</dimension>
+
+	<dimension name="Scenario-EQ Spot Price">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-EQ Spot Price" property="equitySpot">
+		<comparator pluginKey="Desc1SensitivitiesComparator" /> 	
+		</level>
+	</dimension>
+
+	<dimension name="Scenario-EQ Vol">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-EQ Vol" property="equityVol">
+ 			<comparator pluginKey="Desc1SensitivitiesComparator" /> 	
+		</level>
+	</dimension>
+
+
+	<dimension name="Scenario-FX Spot Price" pluginKey="ANZ_VECTOR_ANALYSIS_DIM">
+		<properties>
+			<entry key="containerName" value="FXO_DELGAMMA" />
+		</properties>
+	</dimension>
+
+
+	<dimension name="Scenario-FX Spot Price (Stress)">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-FX Spot Price (Stress)" property="fxSpot">
+			<comparator pluginKey="Desc1SensitivitiesComparator" />
+		</level>
+	</dimension>
+
+
+	<dimension name="Scenario-FX Vol">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-FX Vol" property="fxVol">
+			<comparator pluginKey="Desc1SensitivitiesComparator" />
+		</level>
+	</dimension>
+
+	<dimension name="Scenario-IR">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-IR" property="IR">
+			<comparator pluginKey="ScenarioIR" />
+		</level>
+	</dimension>
+
+	<dimension name="Scenario-IR Vol">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-IR Vol" property="IrVol" />
+	</dimension>
+
+	<dimension name="Scenario-Theta Decay">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Theta Decay" property="ShockDays" />
+	</dimension>
+
+	<dimension name="Scenario-Term">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Term" property="Term">
+			<comparator pluginKey="ScenarioTerm">
+				<order name="firstObjects">
+					<value>1D</value>
+					<value>1d</value>
+					<value>T/N</value>
+					<value>t/n</value>
+					<value>7D</value>
+					<value>7d</value>
+					<value>1W</value>
+					<value>1w</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+
+	<dimension name="Scenario-ANZ Stress Scenarios">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-ANZ Stress Scenarios" property="StressScenario">
+			<comparator pluginKey="Custom">
+				<order name="firstObjects">
+					<value>SpotUp_VolUp</value>
+					<value>SpotDn_VolUp</value>
+					<value>SpotNC_VolDn</value>
+					<value>Financial Market Crash</value>
+					<value>Global Inflationary Crisis</value>
+					<value>Asian Crisis</value>
+					<value>US Economic Crash</value>
+					<value>Single factor FX up</value>
+					<value>Single factor FX down</value>
+					<value>Single factor IR up</value>
+					<value>Single factor IR down</value>
+					<value>Foot and Mouth Disease</value>
+					<value>Offshore Borrowing shock</value>
+					<value>N/A</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+
+
+
+	<dimension name="Source System">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Source System" property="SOURCE_SYSTEM" />
+	</dimension>
+
+<!-- remove with QC / jan 17 
+	<dimension name="ANZ Legal Entity">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="ANZ Legal Entity" property="ANZ_LEGAL_ENTITY" />
+	</dimension>
+ -->	
+
+	<dimension name="Counterparty">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Counterparty" property="M_TP_CNTRP" />
+	</dimension>
+
+	<dimension name="Instrument">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Instrument" property="M_INSTRUMENT" />
+	</dimension>
+
+	<dimension name="Deal Currency">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Deal Currency" property="M_CUR" />
+	</dimension>
+
+	<dimension name="National Market">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="National Market" property="nationalMarket" />
+		<level name="Securities Exchange" property="M_SEC_MKT" />
+	</dimension>
+
+	<dimension name="Sector">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Sector" property="M_SECTOR" />
+	</dimension>
+
+	<dimension name="Trading Portfolio">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="M_PTFOLIO" />
+	</dimension>
+
+	<dimension name="Correction Flag">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="correctionFlag" />
+	</dimension>
+
+	<dimension name="M_DESC0">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="M_DESC0">
+<!-- 			<comparator pluginKey="Desc0SensitivitiesComparator" /> -->
+		</level>
+	</dimension>
+	<dimension name="M_DESC1">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="M_DESC1" property="M_DESC1" />
+	</dimension>
+
+	<dimension name="Scenario-Term Bucket">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Term Bucket" property="termBucket">
+			<comparator pluginKey="AlphaNumReplaceComaparator">
+				<order name="firstObjects">
+					<value>Net 3m</value>
+					<value>Net 1y</value>
+					<value>Net 3y</value>
+					<value>Net 5y</value>
+					<value>Net 10y</value>
+					<value>Net 20y</value>
+					<value>Net 30y+</value>
+					<value>N/A</value>
+				</order>
+
+				<order name="replaceMentStrings">
+					<value>Q</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+
+	<dimension name="Grp:CCY Pair">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:CCY Pair" property="CurrPairL2" />
+	</dimension>
+
+	<dimension name="Grp:CR Rating">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:CR Rating" property="M_RATING" />
+	</dimension>
+
+	<dimension name="Spread Type">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Spread-Type1" property="spreadType" />
+		<level name="Spread-Type2" property="spreadType2" />
+		<level name="ETO-Type" 	   property="etoType" />
+	</dimension>
+
+
+
+	<dimension name="Scenario-Term Underlying">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Term Underlying" property="scenarioTermUnderlying">
+			<comparator pluginKey="ScenarioTerm" />
+		</level>
+	</dimension>
+
+
+
+	
+
+	<dimension name="Scenario-IR Gamma" pluginKey="ANZ_VECTOR_ANALYSIS_DIM" isAllMembersEnabled="true">
+		<properties>
+			<entry key="containerName" value="IR_GAMMA" />
+		</properties>
+	</dimension>
+
+
+	<dimension name="Position ID">
+		<properties>
+			<entry key="DimensionType" value="regular" /> 
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Position ID" property="positionId" />
+	</dimension>
+
+
+	<dimension name="Grp:COM Type">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:COM Type" property="ComHierarchy1" />
+	</dimension>
+
+	<dimension name="Grp:COM Sub-Type">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:COM Sub-Type" property="ComHierarchy2" />
+	</dimension>
+
+	<dimension name="Underlying-COM">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Underlying-COM" property="ComHierarchy3" />
+	</dimension>
+
+
+
+
+	<dimension name="Scenario-Com Vol">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Com Vol" property="scenarioComVol">
+			<comparator pluginKey="numberPercentComp" />
+		</level>
+	</dimension>
+
+	<dimension name="Scenario-Com Price">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Com Price" property="scenarioComPrice">
+			<comparator pluginKey="numberPercentComp" />
+
+		</level>
+	</dimension>
+
+
+	<dimension name="Grp:COM Long Name">	
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:COM Long Name" property="comLongname" />
+	</dimension>
+
+
+  <!-- Remove With QC
+	<dimension name="Com Product Group">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Com Product Group" property="comProductGroup" />
+	</dimension>
+-->
+
+	<dimension name="Grp:COM Stress Label">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Grp:COM Stress Label" property="stressLabel" />
+	</dimension>
+
+
+	<dimension name="Scenario-Dividends">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Dividends" property="scenarioDevidends">
+			<comparator pluginKey="AlphaNumReplaceComaparator">
+				<order name="lastObjects">
+					<value>ALL</value>
+					<value>N/A</value>
+				</order>
+				<order name="replaceMentStrings">
+					<value>%</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension> 
+
+		 <dimension name="Scenario-Correlation Type">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Scenario-Correlation Type" property="correlationType">
+				<comparator pluginKey="Custom">
+					<order name="firstObjects">
+						<value>EQ-EQ</value>
+						<value>EQ-FX</value>
+						<value>EQ-EQFX</value>
+					</order>
+				</comparator>
+			</level>
+		</dimension> 
+
+	 <dimension name="Scenario-Correlation Shock" >
+	<properties>
+		<entry key="DimensionType" value="regular" />
+		<entry key="IsAllMembersEnabled" value="true" />
+	</properties>
+	<level name="Scenario-Correlation Shock" property="correlationShock">
+		<comparator pluginKey="Custom">
+			<order name="firstObjects">
+				<value>Up 1 bp</value>
+				<value>Down 1 bp</value>
+			</order>
+		</comparator>
+	</level> 
+	 </dimension> 
+
+	 <dimension name="Scenario-EQ Moneyness" >
+	 <properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-EQ Moneyness" property="scenarioEQMoneyness" 	>
+			<comparator pluginKey="AlphaNumReplaceComaparator">
+				<order name="lastObjects">
+					<value>N/A</value>
+				</order>
+				<order name="replaceMentStrings">
+					<value>c</value>
+				</order>
+			</comparator>
+		</level> 
+	 </dimension> 
+
+	 <dimension name="Scenario-Recovery Rate" > 
+	  <properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Recovery Rate" property="scenarioRecoveryRate" /> 
+	 </dimension> 
+
+	<!-- VAR Stress Dimension -->
+	<dimension name="VaR Stress-Scenario Nr" pluginKey="VAR_STRESS_SCENARIO_DIM">
+		<!--<comparatorDescription pluginKey="ReverseOrder" /> -->
+	</dimension>
+
+	<dimension name="VaR Stress-Scenario Date" pluginKey="VAR_STRESS_SCENARIO_DATE">
+		<!-- <comparatorDescription pluginKey="ReverseOrder" /> -->
+	</dimension>
+
+	<dimension name="Scenario-Term Gen Pillar">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="Scenario-Term Gen Pillar" property="constantMaturity">
+			<comparator pluginKey="AlphaNumReplaceComaparator">
+				<order name="lastObjects">
+					<value>N/A</value>
+				</order>
+				<order name="replaceMentStrings">
+					<value>c</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+	
+	<!-- disabled Nov 28 QC number 
+	<dimension name="Grp:CCY Family - FX">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		
+		<level name="Grp:CCY Family - FX" property="CurrencyFamilyFX" />
+	</dimension>
+	-->
+	
+	<dimension name="SP Rating">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		
+		<level name="SP Rating" property="SP_Sec_Rating" >
+				<comparator pluginKey="Custom">
+					<order name="firstObjects">
+						<value>A</value>
+						<value>A-</value>
+						<value>A+</value>
+						<value>AA</value>
+						<value>AA-</value>
+						<value>AA+</value>
+						<value>AAA</value>
+						<value>B</value>
+						<value>B-</value>
+						<value>B+</value>
+						<value>BB</value>
+						<value>BB-</value>
+						<value>BB+</value>
+						<value>BBB</value>
+						<value>BBB-</value>
+						<value>BBB+</value>
+						<value>C</value>
+						<value>CC</value>
+						<value>CCC</value>
+						<value>CCC-</value>
+						<value>CCC+</value>
+						<value>CI</value>
+						<value>D</value>
+						<value>N/R</value>
+						<value>Not Found</value>
+						<value>R</value>
+						<value>SD</value>
+					</order>
+				</comparator>
+		</level>
+	</dimension>
+	<dimension name="MO Rating">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="MO Rating" property="MO_Sec_rating" >
+			<comparator pluginKey="Custom">
+				<order name="firstObjects">
+					<value>A1</value>
+					<value>A2</value>
+					<value>A3</value>
+					<value>Aa1</value>
+					<value>Aa2</value>
+					<value>Aa3</value>
+					<value>Aaa</value>
+					<value>B1</value>
+					<value>B2</value>
+					<value>B3</value>
+					<value>Ba1</value>
+					<value>Ba2</value>
+					<value>Ba3</value>
+					<value>Baa1</value>
+					<value>Baa2</value>
+					<value>Baa3</value>
+					<value>C</value>
+					<value>Ca</value>
+					<value>Caa1</value>
+					<value>Caa2</value>
+					<value>Caa3</value>
+					<value>N/R</value>
+				</order>
+			</comparator>
+		
+		</level>
+		
+	</dimension>
+	
+	<dimension name="FT Rating" >
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+		<level name="FT Rating" property="FT_Sec_Rating">
+			<comparator pluginKey="Custom">
+				<order name="firstObjects">
+					<value>A</value>
+					<value>A-</value>
+					<value>A+</value>
+					<value>AA</value>
+					<value>AA-</value>
+					<value>AA+</value>
+					<value>AAA</value>
+					<value>B</value>
+					<value>B-</value>
+					<value>B+</value>
+					<value>BB</value>
+					<value>BB-</value>
+					<value>BB+</value>
+					<value>BBB</value>
+					<value>BBB-</value>
+					<value>BBB+</value>
+					<value>C</value>
+					<value>CC</value>
+					<value>CCC</value>
+					<value>CCC-</value>
+					<value>CCC+</value>
+					<value>CI</value>
+					<value>D</value>
+					<value>N/R</value>
+					<value>R</value>
+					<value>SD</value>
+				</order>
+			</comparator>
+		</level>
+	</dimension>
+	
+	
+		<dimension name="Grp: COM Unit">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp: COM Unit" property="ComUnit">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+	
+		<dimension name="ComPriceQuotation" >
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="ComPriceQuotation" property="ComPriceQuotation">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:COM Index Name">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:COM Index Name" property="ComIndexName">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:CR Rating - Generic">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Rating - Generic" property="AnzRatingSP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:CR Investment Grade">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Investment Grade" property="InvestmentGradeSP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:CR Rating Band - LT">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Rating Band - LT" property="RatingBandSP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:CR Rating Band - Other">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Rating Band - Other" property="RatingBandOtherSP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+	
+	
+	
+		<dimension name="Grp:CR Rating Band - Sec">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Rating Band - Sec" property="RatingBandSecSP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>
+	
+		<dimension name="Grp:CR Agency">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Agency" property="RatingAgencySP">
+<!-- 				<comparator pluginKey="Custom"> -->
+<!-- 					<order name="firstObjects"> -->
+<!-- 					</order> -->
+<!-- 				</comparator> -->
+			</level>
+		</dimension>	
+		
+		<!-- Disabled Nov28 QC Number
+		<dimension name="Grp:CCY Family - LM">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CCY Family - LM" property="CcyFamilyLM">
+			</level>
+		</dimension>	
+		-->
+
+		<dimension name="Grp:CR Index Type">
+		<properties>
+			<entry key="DimensionType" value="regular" />
+			<entry key="IsAllMembersEnabled" value="true" />
+		</properties>
+			<level name="Grp:CR Index Type" property="creditIndexType">
+			</level>
+		</dimension>	
+		
+		
+
+		<dimension name="Issuer Hierarchy" >
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			
+			    <level name="Issuer 1" property="Issuer1" />
+			    <level name="Issuer 2" property="Issuer2" />
+			    <level name="Issuer 3" property="Issuer3" />
+			    <level name="Issuer 4" property="Issuer4" />
+		</dimension>
+	
+	
+	    <dimension name="Issuer">
+		    <properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Issuer" property="M_ISSUER" />
+		</dimension>
+	
+		<dimension name="Legal Entity Hierarchy" >
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			
+			    <level name="Legal Entity 1" property="LegalEntity1" />
+			    <level name="Legal Entity 2" property="LegalEntity2" />
+			    <level name="Legal Entity 3" property="LegalEntity3" />
+			    <level name="Legal Entity 4" property="LegalEntity4" />
+			    <level name="Legal Entity 5" property="LegalEntity5" />
+			    <level name="Legal Entity 6" property="LegalEntity6" />
+			    
+		</dimension>
+		
+		
+		<dimension name="Grp:CCY Group (Deal Currency)">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Grp:CCY Group (Deal Currency)" property="DealCurrencyGroup" />
+		</dimension>
+
+		<dimension name="Grp:CCY Family - FXO (Deal Currency)">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Grp:CCY Family - FXO (Deal Currency)" property="DealCurrencyFamily" />
+		</dimension>
+	
+		<dimension name="Curve Type">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Curve Type" property="curveType" />
+		</dimension>
+		
+	
+		<dimension name="Single CCY Type">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Single CCY Type" property="singleCcyType" />
+		</dimension>
+	
+		<dimension name="Finance Hierarchy">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Tier 1" property="financeHierarchy1" />
+			<level name="Tier 2" property="financeHierarchy2" />
+			<level name="Tier 3" property="financeHierarchy3" />
+			<level name="Tier 4" property="financeHierarchy4" />
+			<level name="Tier 5" property="financeHierarchy5" />
+			<level name="Tier 6" property="financeHierarchy6" />
+			<level name="Tier 7" property="financeHierarchy7" />
+			<level name="Tier 8" property="financeHierarchy8" />
+			<level name="Tier 9" property="financeHierarchy9" />
+			<level name="Tier 10" property="financeHierarchy10" />
+		</dimension>  
+		
+		<dimension name="Expiry Date">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Expiry Date" property="expiry" >
+				<comparator pluginKey="ExpiryDateComparator" > 	
+					<order name="lastObjects">
+						<value>N/A</value>
+					</order>					
+				</comparator>
+			</level>		
+		</dimension>		
+		
+		<dimension name="Proxy Data">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Proxy Data" property="isProxy" />
+		</dimension>	
+		
+		<dimension name="Is Clean PnL">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Is Clean PnL" property="isClean" />
+		</dimension>
+		
+		<dimension name="Revenue Code">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Revenue Code" property="revenueCode" />
+		</dimension>	
+		
+		<dimension name="Revenue Hierarchy">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Tier 1" property="revenueHierarchy1" />
+			<level name="Tier 2" property="revenueHierarchy2" />
+			<level name="Tier 3" property="revenueHierarchy3" />
+			<level name="Tier 4" property="revenueHierarchy4" />
+			<level name="Tier 5" property="revenueHierarchy5" />
+			<level name="Tier 6" property="revenueHierarchy6" />
+			<level name="Tier 7" property="revenueHierarchy7" />
+			<level name="Tier 8" property="revenueHierarchy8" />
+			<level name="Tier 9" property="revenueHierarchy9" />
+			<level name="Tier 10" property="revenueHierarchy10" />
+		</dimension>  
+		
+		<dimension name="Capital Hierarchy">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Capital Hierarchy" property="capitalHierarchy" />
+		</dimension>	
+		
+		<dimension name="LE Group">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="LE Group" property="isLeGroup" />
+		</dimension>
+		
+		<dimension name="Grp:CCY Pair OnOffShore">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Grp:CCY Pair OnOffShore" property="ccyPairOnOffShore" />
+		</dimension>
+
+
+	<!-- VAR Six Year Dimension -->
+	<dimension name="VaR 1540-Scenario Nr" pluginKey="VAR_SIX_YEAR_SCENARIO_DIM" />
+	<dimension name="VaR 1540-Scenario Date" pluginKey="VAR_SIX_YEAR_SCENARIO_DATE" />
+	
+	
+	
+		<dimension name="Catch All Risk Type">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Catch All Risk Type" property="M_RISK_TYPE" />
+		</dimension>
+	
+	
+		<dimension name="Data Snapshot">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="false" />
+			</properties>
+			<level name="Data Snapshot" property="Snapshot" />
+		</dimension>
+		
+		<dimension name="Product SubType">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Product SubType" property="pCode" />
+		</dimension>
+		
+		<dimension name="Daily Pillars">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>			
+			<level name="Daily Pillars" property="dailyPillar" >
+				<comparator pluginKey="DateComparator" > 	
+					<order name="lastObjects">
+						<value>N/A</value>
+					</order>					
+				</comparator>
+			</level>		
+		</dimension>
+		
+		<dimension name="Seniority">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Seniority" property="M_SENIORITY" />
+		</dimension>
+		
+		<dimension name="FundingType">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="Tier 1" property="cfType1" />
+			<level name="Tier 2" property="cfType2" />
+		</dimension>
+		
+		<dimension name="CUSIP">
+			<properties>
+				<entry key="DimensionType" value="regular" />
+				<entry key="IsAllMembersEnabled" value="true" />
+			</properties>
+			<level name="CUSIP" property="cusip" />
+		</dimension>
+		
+		
+		
+</dimensions>  

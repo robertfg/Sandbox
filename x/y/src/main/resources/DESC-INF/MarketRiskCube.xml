@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pivotDescription xmlns:p="http://jaxb.dev.java.net/array"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="activepivot-types.xsd">
+
+	<!-- Cache the most recently accessed {location,measure} pairs -->
+	<aggregatesCacheSize>-1</aggregatesCacheSize>
+
+	<!-- Selection of the BITMAP aggregate provider -->
+	<aggregatorStorage pluginKey="BITMAP">
+		<properties>
+			<!-- Disable parallel aggregation for simple scalar measures -->
+			<entry key="parallelAggregation" value="false" />
+			<!-- Performance timings are off by default. Enable them for fine tuning. -->
+			<entry key="printTimings" value="false" />
+		</properties>
+	</aggregatorStorage>
+
+	<!-- Definition of the dimensions -->
+	<dimensions>
+		<import resource="DESC-INF/MarketRiskDimensions.xml" />
+	</dimensions>
+
+	<!-- Definition of the measures -->
+	<measures>
+		<measure name="M_RESULT" aggregationFunctions="SUM"
+			folder="P&amp;L Measures" />
+		<measure name="M_RESULTV" aggregationFunctions="SUM MIN"
+			folder="P&amp;L Measures" />
+		<measure name="M_RESULT_DEALCCY" aggregationFunctions="SUM"
+			folder="P&amp;L Measures" />
+		<measure name="M_RESULTV_DEALCCY" aggregationFunctions="SUM"
+			folder="P&amp;L Measures" />
+
+		<measure name="CHANGEIN_V" isIntrospectionMeasure="false"
+			folder="P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="M_RESULTV" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="CHANGEIN" isIntrospectionMeasure="false"
+			folder="P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="M_RESULT" />
+					<entry key="underlyingMeasures" value="M_RESULT.SUM" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="FXDELGAMMA" property="FxVector_result"
+			aggregationFunctions="SUM" folder="FXO DeltaGamma P&amp;L Measures">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULT" />
+					<entry key="underlyingMeasures" value="FxVector_result.SUM" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-FX Spot Price@Scenario-FX Spot Price" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="FXO_DELGAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="FXDELTA_CHANGEIN" isIntrospectionMeasure="false"
+			folder="FXO DeltaGamma P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="M_RESULT" />
+					<entry key="underlyingMeasures" value="FXDELGAMMA.VECTOR_RESULT" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+		<measure name="FXDELGAMMAV" property="FxVector_result"
+			aggregationFunctions="SUM" folder="FXO DeltaGamma P&amp;L Measures">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULTV" />
+					<entry key="underlyingMeasures" value="FxVector_resultv.SUM" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-FX Spot Price@Scenario-FX Spot Price" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="FXO_DELGAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="FXDELTA_CHANGEIN_V" isIntrospectionMeasure="false"
+			folder="FXO DeltaGamma P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="M_RESULTV" />
+					<entry key="underlyingMeasures" value="FXDELGAMMAV.VECTOR_RESULTV" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="CALCDV01" isIntrospectionMeasure="false"
+			folder="Calculated P&amp;L Measures">
+			<postProcessor pluginKey="CALC_DV01">
+				<properties>
+					<entry key="id" value="DV01" />
+					<entry key="underlyingMeasures"
+						value="IrGammaVector_result.SUM,IrGammaVector_resultv.SUM" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+	<!-- 	Dummy Measures Limits Measures should be Post-processors removed on 10-Jan-2013
+		<measure name="Limit" aggregationFunctions="SUM" folder="Limits Measures" />
+		<measure name="Utilisation" aggregationFunctions="SUM"
+			folder="Limits Measures" />
+
+		<measure name="1DVaR_EQD" aggregationFunctions="SUM"
+			folder="1 day VaR Measures" />
+		<measure name="1DVaR_EQV" aggregationFunctions="SUM"
+			folder="1 day VaR Measures" />
+		<measure name="1DVaR_FXV" aggregationFunctions="SUM"
+			folder="1 day VaR Measures" />
+		<measure name="1DVaR_IRD" aggregationFunctions="SUM"
+			folder="1 day VaR Measures" /> -->
+
+
+
+		<!-- VAR Measures -->
+
+		<!-- VaR 1D (AUD) -->
+		<measure name="1DVaRPLVector_AUD" property="1DVaRPL_AUD"
+			aggregationFunctions="SUM" folder="1 day VaR Measures" />
+
+		<measure name="PLScenario_1Day" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					<entry key="containerDim" value="Container" />
+					
+					<entry key="vectorLength" value="500" />
+					<entry key="varDateType" value="VARDATES" />  
+					<entry key="varContainer" value="VaR and P&amp;L" />
+ 
+
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="1DVaR" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="1DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+
+                    <entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+
+				</properties>
+				
+			</postProcessor>
+			<postProcessor pluginKey="VAR_CONFIDENCE_OFFSET">
+				<properties>
+					<entry key="id" value="CONFIDENCE_OFFSET" />
+					<entry key="underlyingMeasures" value="1DVaR.SORT,1DVaRPLVector_AUD.SUM" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					<entry key="otherDiscriminatorLevel" 
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" /> 
+
+					 <entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+					
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGE_RESULT" />
+					<entry key="underlyingMeasures" value="1DVaR.SUM" />
+					<entry key="firstDiscriminatorLevel"
+						value="COB Date@COB Date:VaR-Confidence Level@VaR-Confidence Level" />
+		
+					
+				</properties>
+			</postProcessor>
+			
+			<postProcessor pluginKey="VECTOR_SUM">
+				<properties>
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+			
+		</measure>
+
+		<measure name="FxVector_result" aggregationFunctions="SUM" />
+		<measure name="FxVector_resultv" aggregationFunctions="SUM" />
+
+
+		<!-- VaR 10D (AUD) -->
+		<measure name="10DVaRPLVector_AUD" property="10DVaRPL_AUD"
+			aggregationFunctions="SUM" folder="10 day VaR Measures" />
+
+		<measure name="PLScenario_10Day" isIntrospectionMeasure="false"
+			folder="10 day VaR Measures">
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					<entry key="containerDim" value="Container" />
+					
+					<entry key="vectorLength" value="500" />
+					<entry key="varDateType" value="VARDATES" />
+					<entry key="varContainer" value="VaR and P&amp;L" />
+					
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="10DVaR" isIntrospectionMeasure="false"
+			folder="10 day VaR Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="10DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+					
+				</properties>
+			</postProcessor>
+			<postProcessor pluginKey="VAR_CONFIDENCE_OFFSET">
+				<properties>
+					<entry key="id" value="CONFIDENCE_OFFSET" />
+					<entry key="underlyingMeasures" value="10DVaR.SORT,10DVaRPLVector_AUD.SUM" /> 
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" /> 
+						
+						 <entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGE_RESULT" />
+					<entry key="underlyingMeasures" value="10DVaR.SUM" />
+					<entry key="firstDiscriminatorLevel"
+						value="COB Date@COB Date:VaR-Confidence Level@VaR-Confidence Level" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VECTOR_SUM">
+				<properties>
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>			
+		</measure>
+
+
+
+
+		<!-- ================================================================== -->
+		<!-- Expected Tail Loss -->
+		<measure name="1DVaR_ETL" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="ETL">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="1DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="10DVaR_ETL" isIntrospectionMeasure="false"
+			folder="10 day VaR Measures">
+			<postProcessor pluginKey="ETL">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="10DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- ================================================================== -->
+
+		<!-- ================================================================== -->
+		<!-- Marginal Value at Risk -->
+		<measure name="1DVar_Marginal" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="MVAR">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM, 1DVaR.SORT" />
+					<entry key="parentDimension" value="Risk Portfolio Hierarchy" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+		<measure name="10DVar_Marginal" isIntrospectionMeasure="false"
+			folder="10 day VaR Measures">
+			<postProcessor pluginKey="MVAR">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM, 10DVaR.SORT" />
+					<entry key="parentDimension" value="Risk Portfolio Hierarchy" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- ================================================================== -->
+
+
+		<!-- ================================================================== -->
+		<!-- Incremental Value at Risk -->
+		<measure name="1DVaR_Incremental" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="IVAR">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+					<entry key="parentDimension" value="Risk Portfolio Hierarchy" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+		<measure name="10DVaR_Incremental" isIntrospectionMeasure="false"
+			folder="10 day VaR Measures">
+			<postProcessor pluginKey="IVAR">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+					<entry key="parentDimension" value="Risk Portfolio Hierarchy" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- ================================================================== -->
+
+		<!-- ================================================================== -->
+		<!-- Hypo P&L -->
+		<measure name="HypoPL_scenario_AUD" aggregationFunctions="SUM"
+			folder="Hypo Measures" />
+		<!-- ================================================================== -->
+
+		<!-- ================================================================== -->
+		<!-- attributions -->
+		<measure name="FXDir_AUD_PLVector" property="FXDirPL_AUD"
+			aggregationFunctions="SUM" />
+
+		<measure name="1DVaR_FXDir_AUD" isIntrospectionMeasure="false"
+			folder="1 day VaR Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="FXDir_AUD_PLVector.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="1DVaR_FXDir_AUD.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					<entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+							
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+		<measure name="HypoEqDir" aggregationFunctions="SUM" folder="Hypo Measures" />
+		<measure name="HypoEqVol" aggregationFunctions="SUM" folder="Hypo Measures" />
+		<measure name="HypoFxDir_AUD" aggregationFunctions="SUM"
+			folder="Hypo Measures" />
+		<measure name="HypoFxVol" aggregationFunctions="SUM" folder="Hypo Measures" />
+		<measure name="HypoIRDir" aggregationFunctions="SUM" folder="Hypo Measures" />
+
+
+		<!-- Measures below used for drill through enrichment -->
+		<measure name="M_ISSUER" />
+		<measure name="M_SENIORITY" />
+		<measure name="M_RATING" />
+		<measure name="M_COUNTRY" />
+		<measure name="M_TRN_DATE" />
+		<measure name="M_TP_CP" />
+		<measure name="M_TP_AE" />
+		<measure name="M_PL_CUR" />
+		<measure name="M_DEALNUM" />
+
+
+		<measure name="Spread" isIntrospectionMeasure="false"
+			folder="Calculated P&amp;L Measures">
+			<postProcessor pluginKey="SPREAD_RISK_PP">
+				<properties>
+					<entry key="id" value="Spread" />
+					<entry key="underlyingMeasures" value="M_RESULT.SUM" />
+					<entry key="dimensionName" value="Spread Type" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="NEGATIVESPREADS" value="BOND,OIS,GOVT" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVegaCapFloor" isIntrospectionMeasure="false"
+			folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="IR_VEGA_CAP_FLOOR">
+				<properties>
+					<entry key="id" value="IrVegaCapFloor" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimensionName" value="Scenario-Term" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVegaSwaptions" isIntrospectionMeasure="false"
+			folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="IR_VEGA_SWAPTIONS">
+				<properties>
+					<entry key="id" value="IrVegaSwaptions" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVegaEto" isIntrospectionMeasure="false"
+			folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="IR_VEGA_ETO">
+				<properties>
+					<entry key="id" value="IrVegaEto" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVegaCombine" isIntrospectionMeasure="false"
+			folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="IR_VEGA_COMBINE">
+				<properties>
+					<entry key="id" value="IrVegaCombine" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="dimSpreadType" value="Spread Type" />
+
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+		<measure name="CHANGEIN_SPREAD" isIntrospectionMeasure="false"
+			folder="Calculated P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGEIN_SPREAD" />
+					<entry key="underlyingMeasures" value="Spread.Spread" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="CHANGEIN_IRVEGA_CAPFLOOR"
+			isIntrospectionMeasure="false" folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGEIN_IRVEGA_CAPFLOOR" />
+					<entry key="underlyingMeasures" value="IrVegaCapFloor.IrVegaCapFloor" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="CHANGEIN_IRVEGA_SWAPTIONS"
+			isIntrospectionMeasure="false" folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGEIN_IRVEGA_SWAPTIONS" />
+					<entry key="underlyingMeasures" value="IrVegaSwaptions.IrVegaSwaptions" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="CHANGEIN_IRVEGA_ETO" isIntrospectionMeasure="false"
+			folder="IR Vega P&amp;L Measures">
+			<postProcessor pluginKey="CHANGE_RESULT">
+				<properties>
+					<entry key="id" value="CHANGEIN_IRVEGA_ETO" />
+					<entry key="underlyingMeasures" value="IrVegaEto.IrVegaEto" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="firstDiscriminatorLevel" value="COB Date@COB Date" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- Limit Related measure removed on 10-Jan-2013-->
+
+<!-- 		<measure name="MRESULT_LIMIT" isIntrospectionMeasure="false"
+			folder="Limits Measures">
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="LIMIT" />
+					<entry key="underlyingMeasures" value="M_RESULT.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="LIMIT" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="UTLIZATION" />
+					<entry key="underlyingMeasures" value="M_RESULT.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="UTLIZATION" />
+				</properties>
+			</postProcessor>
+
+		</measure>
+
+
+		<measure name="M_RESULTV_LIMIT" isIntrospectionMeasure="false"
+			folder="Limits Measures">
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="LIMIT" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="LIMIT" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="UTLIZATION" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="UTLIZATION" />
+				</properties>
+			</postProcessor>
+
+		</measure>
+
+		<measure name="1DVaR_LIMIT" isIntrospectionMeasure="false"
+			folder="Limits Measures">
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="LIMIT" />
+					<entry key="underlyingMeasures" value="1DVaR.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="LIMIT" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="MEASURE_LIMIT">
+				<properties>
+					<entry key="id" value="UTLIZATION" />
+					<entry key="underlyingMeasures" value="1DVaR.SUM" />
+					<entry key="cobDate" value="COB Date" />
+					<entry key="mode" value="UTLIZATION" />
+				</properties>
+			</postProcessor>
+
+		</measure> -->
+
+		<!-- VAR Stress Measure -->
+
+		<measure name="StressVector_AUD" property="STRESS_VAR_VECTOR"
+			aggregationFunctions="SUM" folder="Stress VaR Measures" />
+
+
+		<measure name="PLStressVAR" isIntrospectionMeasure="false"
+			folder="Stress VaR Measures">
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+					<entry key="underlyingMeasures" value="StressVector_AUD.SUM" /> <!-- 1D and Stress are sharing the same column in UVR -->
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel"
+						value="VaR Stress-Scenario Nr@VaR Stress-Scenario Nr:VaR Stress-Scenario Date@VaR Stress-Scenario Date" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="vectorLength" value="261" />
+					<entry key="varDateType" value="VARSTRESSDATES" />
+
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+
+
+		<measure name="StressVaR" isIntrospectionMeasure="false"
+			folder="Stress VaR Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="StressVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="StressVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+				
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- VAR Stress Measure -->
+
+		<measure name="M_RESULT_LOT" aggregationFunctions="SUM"
+			folder="P&amp;L Measures" />
+
+
+		<!-- IR GAMMA Vectorization -->
+		<measure name="IrGammaVector_result" aggregationFunctions="SUM" />
+		<measure name="IrGammaVector_resultv" aggregationFunctions="SUM" />
+
+		<measure name="IRGAMMA_MRESULT" property="IrGammaVector_result"
+			aggregationFunctions="SUM" folder="IR Gamma">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULT" />
+					<entry key="underlyingMeasures" value="IrGammaVector_result.SUM" />
+
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="IR_GAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IRGAMMA_MRESULTV" property="IrGammaVector_result"
+			aggregationFunctions="SUM" folder="IR Gamma">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULTV" />
+					<entry key="underlyingMeasures" value="IrGammaVector_resultv.SUM" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="IR_GAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+		
+				
+		<measure name="AdjustedIrGammaVector_result" aggregationFunctions="SUM" />
+		<measure name="AdjustedIrGammaVector_resultv" aggregationFunctions="SUM" />
+
+		<measure name="ADJUSTED_IRGAMMA_MRESULT" property="AdjustedIrGammaVector_result"
+			aggregationFunctions="SUM" folder="IR Gamma">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULT" />
+					<entry key="underlyingMeasures" value="AdjustedIrGammaVector_result.SUM" />
+
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="IR_GAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="ADJUSTED_IRGAMMA_MRESULTV" property="AdjustedIrGammaVector_result"
+			aggregationFunctions="SUM" folder="IR Gamma">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULTV" />
+					<entry key="underlyingMeasures" value="AdjustedIrGammaVector_resultv.SUM" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="IR_GAMMA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- IR GAMMA Vectorization -->
+
+
+		<!-- Iteration 4 VANNA VOLGA computations -->
+
+		<measure name="IrVolgaCapFloor" isIntrospectionMeasure="false"
+			folder="IR Vanna &amp; IR Volga">
+			<postProcessor pluginKey="IR_VOLGA_CAPFLOOR">
+				<properties>
+					<entry key="id" value="MResultV" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimensionName" value="Scenario-Term" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="dimSpreadType" value="Spread Type" />
+					<entry key="dimContainerName" value="Container" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherContainer" value="IR_VEGA" />
+					<entry key="validContainer" value="IR_VANNA,IR_VOLGA,IR_VEGA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVolgaEto" isIntrospectionMeasure="false"
+			folder="IR Vanna &amp; IR Volga">
+			<postProcessor pluginKey="IR_VOLGA_ETO">
+				<properties>
+					<entry key="id" value="MResultV" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimensionName" value="Scenario-Term" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="dimSpreadType" value="Spread Type" />
+					<entry key="dimContainerName" value="Container" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherContainer" value="IR_VEGA" />
+					<entry key="validContainer" value="IR_VANNA,IR_VOLGA,IR_VEGA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="IrVolgaSwaption" isIntrospectionMeasure="false"
+			folder="IR Vanna &amp; IR Volga">
+			<postProcessor pluginKey="IR_VOLGA_SWAPTION">
+				<properties>
+					<entry key="id" value="MResultV" />
+					<entry key="underlyingMeasures" value="M_RESULTV.SUM" />
+					<entry key="dimensionName" value="Scenario-Term" />
+					<entry key="dimTermBucket" value="Scenario-Term" />
+					<entry key="dimScenTermUnderlying" value="Scenario-Term Underlying" />
+					<entry key="dimSpreadType" value="Spread Type" />
+					<entry key="dimContainerName" value="Container" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="otherContainer" value="IR_VEGA" />
+					<entry key="validContainer" value="IR_VANNA,IR_VOLGA,IR_VEGA" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+		<!-- GAMMA BASIS -->
+
+		<measure name="GAMMA_BASIS" property="IrGammaVector_result"
+			aggregationFunctions="SUM" folder="Gamma-Basis Vectorization">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULT" />
+					<entry key="underlyingMeasures" value="IrGammaVector_result.SUM" />
+
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="GAMMA_BASIS" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="GAMMA_BASISV" property="IrGammaVector_result"
+			aggregationFunctions="SUM" folder="Gamma-Basis Vectorization">
+			<postProcessor pluginKey="VECTOR_DISPLAY_PP">
+				<properties>
+					<entry key="id" value="VECTOR_RESULTV" />
+					<entry key="underlyingMeasures" value="IrGammaVector_resultv.SUM" />
+					<entry key="firstDiscriminatorLevel" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+					<entry key="dateDimension" value="COB Date@COB Date" />
+					<entry key="otherDiscriminatorLevel"
+						value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date:VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerName" value="GAMMA_BASIS" />
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- GAMMA BASIS END-->
+
+		<measure name="IrVannaCombine"  folder="IR Vanna &amp; IR Volga" isIntrospectionMeasure="false">
+			 <postProcessor pluginKey="FORMULA">
+				<properties>
+					<entry key="id"      value="VannaVolgaCombine" />
+					<entry key="formula" value="aggregatedValue[IrVolgaCapFloor.MResultV],aggregatedValue[IrVolgaEto.MResultV],+,aggregatedValue[IrVolgaSwaption.MResultV],+" />
+				</properties>
+			</postProcessor>
+		</measure>
+		
+		
+		
+		<!--  VAR WIndow testing -->
+	  <measure name="UatPLScenario_1Day" isIntrospectionMeasure="false" folder="UAT 1 day VaR Measures">
+			
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					
+					
+					<entry key="containerDim" value="Container" />
+					
+					<entry key="vectorLength" value="500" />
+					<entry key="varDateType" value="VARDATESUAT" />
+					<entry key="varContainer" value="UAT VaR and P&amp;L" />
+					
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="Uat1DVaR" isIntrospectionMeasure="false" folder="UAT 1 day VaR Measures">
+			
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="1DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="Uat1DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerDim" value="Container" />
+					
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+					
+				</properties>
+			</postProcessor>
+	
+		</measure>
+
+
+
+		<measure name="UatPLScenario_10Day" isIntrospectionMeasure="false" 	folder="UAT 10 day VaR Measures">
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+		
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+		
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Scenario Nr@VaR-Scenario Nr:VaR-Scenario Date@VaR-Scenario Date" />
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					
+					
+					<entry key="containerDim" value="Container" />
+					<entry key="vectorLength" value="500" />
+					<entry key="varDateType" value="VARDATESUAT" />
+			
+					<entry key="varContainer" value="UAT VaR and P&amp;L" />
+					
+					
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<measure name="Uat10DVaR" isIntrospectionMeasure="false"	folder="UAT 10 day VaR Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="10DVaRPLVector_AUD.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="Uat10DVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					
+					<entry key="containerDim" value="Container" />
+					
+					<entry key="containerName" value="VaR and P&amp;L" />
+					
+					</properties>
+			</postProcessor>
+		
+		</measure>
+
+				
+		<measure name="Finance_PnL_YTD" aggregationFunctions="SUM"	
+			folder="P&amp;L Measures" />
+		<measure name="Finance_PnLAdjusted_YTD" aggregationFunctions="SUM" 
+			folder="P&amp;L Measures" />
+	
+				
+
+		
+		
+		
+		
+		<!-- VAR Six Year Measure -->
+
+		<measure name="PLSixYearMeasure" property="SixYearVaRPL_AUD"
+			aggregationFunctions="SUM" folder="Six Year VaR Measures" />
+
+
+		<measure name="SixYearPLMeasure" isIntrospectionMeasure="false"
+			folder="VaR 1540 Measures">
+			<postProcessor pluginKey="VAR_SCENARIO_PP">
+				<properties>
+					<entry key="id" value="Sum" />
+					<entry key="underlyingMeasures" value="PLSixYearMeasure.SUM" /> <!-- 1D and Stress are sharing the same column in UVR -->
+					<entry key="timeDimension" value="COB Date" />
+					<entry key="firstDiscriminatorLevel"
+						value="VaR 1540-Scenario Nr@VaR 1540-Scenario Nr:VaR 1540-Scenario Date@VaR 1540-Scenario Date" />
+					
+					<entry key="otherDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="vectorLength" value="1540" />
+					<entry key="varDateType" value="VARSIXYEARDATES" />
+
+				</properties>
+			</postProcessor>
+		</measure>
+
+
+
+
+		<measure name="SixYearVaR" isIntrospectionMeasure="false"
+			folder="VaR 1540 Measures">
+			<postProcessor pluginKey="SORT">
+				<properties>
+					<entry key="underlyingMeasures" value="PLSixYearMeasure.SUM" />
+				</properties>
+			</postProcessor>
+
+			<postProcessor pluginKey="VAR_CONFIDENCE_LEVEL_PP">
+				<properties>
+					<entry key="id" value="SUM" />
+					<entry key="underlyingMeasures" value="SixYearVaR.SORT" />
+					<entry key="firstDiscriminatorLevel" value="VaR-Confidence Level@VaR-Confidence Level" />
+					<entry key="containerDim" value="Container" />
+					<entry key="containerName" value="VAR_SIX_YEARS" />
+					
+				
+				</properties>
+			</postProcessor>
+		</measure>
+
+		<!-- VAR Six Year Measure -->
+		
+	
+
+	</measures>
+
+	<sharedContexts>
+		<!-- queries timeout -->
+	 
+	 	<queriesTimeLimit seconds="300" />  
+ 	 
+ 
+		<!-- drillthroughMaxRows -->
+		<drillthroughMaxRows maxRows="500000" />
+
+
+		<subCubeProperties isAccessGranted="true">
+			<grantedMeasures>
+				<measure>contributors.COUNT</measure>
+				<measure>M_RESULTV.SUM</measure>
+				<measure>M_RESULT.SUM</measure>
+				<measure>M_RESULTV.MIN</measure>
+				<measure>CHANGEIN_V.M_RESULTV</measure>
+				<measure>CHANGEIN.M_RESULT</measure>
+				<measure>M_RESULT_DEALCCY.SUM</measure>
+				<measure>M_RESULTV_DEALCCY.SUM</measure>
+				<measure>M_RESULT_LOT.SUM</measure>
+
+				<measure>1DVaR.SUM</measure>
+				<measure>PLScenario_1Day.Sum</measure>
+				<measure>PLScenario_10Day.Sum</measure>
+
+				<!-- <measure>10DVaR.CONFIDENCE_OFFSET</measure> -->
+				<!-- <measure>1DVaR.CONFIDENCE_OFFSET</measure> -->
+
+				<measure>1DVaR.CHANGE_RESULT</measure>
+				<measure>10DVaR.CHANGE_RESULT</measure>
+				<measure>10DVaR.SUM</measure>
+
+
+				<measure>1DVar_Marginal.SUM</measure>
+				<measure>10DVar_Marginal.SUM</measure>
+
+				<measure>1DVaR_Incremental.SUM</measure>
+				<measure>10DVaR_Incremental.SUM</measure>
+
+				<!-- <measure>1DVaR_ETL.SUM</measure> -->
+				<!-- <measure>10DVaR_ETL.SUM</measure> -->
+
+				<!-- displayed as we need to access them in the VaR service else not 
+					reachable -->
+				<measure>1DVaRPLVector_AUD.SUM</measure>
+				<measure>10DVaRPLVector_AUD.SUM</measure>
+				<!-- end -->
+				<measure>HypoPL_scenario_AUD.SUM</measure>
+				<measure>1DVaR_FXDir_AUD</measure>
+
+				<!-- <measure>HypoEqDir.SUM</measure> -->
+				<!-- <measure>HypoEqVol.SUM</measure> -->
+				<!-- <measure>HypoFxDir_AUD.SUM</measure> -->
+				<!-- <measure>HypoFxVol.SUM</measure> -->
+				<!-- <measure>HypoIRDir.SUM</measure> -->
+
+				<measure>Utilisation.SUM</measure>
+				<!-- <measure>Limit.SUM</measure> -->
+
+				<!-- <measure>1DVaR_IRD.SUM</measure> -->
+				<!-- <measure>1DVaR_FXV.SUM</measure> -->
+
+				<!-- <measure>1DVaR_EQV.SUM</measure> -->
+				<!-- <measure>1DVaR_EQD.SUM</measure> -->
+
+				<measure>Spread.Spread</measure>
+				<measure>IrVegaCapFloor.IrVegaCapFloor</measure>
+				<measure>IrVegaSwaptions.IrVegaSwaptions</measure>
+				<measure>IrVegaEto.IrVegaEto</measure>
+				<measure>IrVegaCombine.IrVegaCombine</measure>
+				<!-- <measure>FxVector.SUM</measure> -->
+				<!-- <measure>FxVector.VectorizedFxValues</measure> -->
+				<measure>CHANGEIN_SPREAD.CHANGEIN_SPREAD</measure>
+<!--
+				<measure>CHANGEIN_IRVEGA_CAPFLOOR.CHANGEIN_IRVEGA_CAPFLOOR</measure>
+				<measure>CHANGEIN_IRVEGA_SWAPTIONS.CHANGEIN_IRVEGA_SWAPTIONS</measure>
+				<measure>CHANGEIN_IRVEGA_ETO.CHANGEIN_IRVEGA_ETO</measure>
+-->
+				<measure>CALCDV01.DV01</measure>
+
+				<measure>FXDELGAMMA.VECTOR_RESULT</measure>
+				<measure>FXDELGAMMAV.VECTOR_RESULTV</measure>
+				<measure>FXDELTA_CHANGEIN_V.M_RESULTV</measure>
+				<measure>FXDELTA_CHANGEIN.M_RESULT</measure>
+				<!--  <measure>MRESULT_LIMIT.LIMIT</measure> 
+				 <measure>MRESULT_LIMIT.UTLIZATION</measure> 
+				 <measure>M_RESULTV_LIMIT.LIMIT</measure> 
+				 <measure>M_RESULTV_LIMIT.UTLIZATION</measure>  
+				 <measure>1DVaR_LIMIT.LIMIT</measure> 
+				 <measure>1DVaR_LIMIT.UTLIZATION</measure> -->
+
+				<measure>PLStressVAR.Sum</measure>
+				<measure>StressVaR.SUM</measure>
+				<measure>StressVector_AUD.SUM</measure>
+
+				<measure>IRGAMMA_MRESULT.VECTOR_RESULT</measure>
+				<measure>IRGAMMA_MRESULTV.VECTOR_RESULTV</measure>  
+
+				<measure>GAMMA_BASIS.VECTOR_RESULT</measure>
+				<measure>GAMMA_BASISV.VECTOR_RESULTV</measure>
+
+				<measure>IrVolgaCapFloor.MResultV</measure>
+				<measure>IrVolgaEto.MResultV</measure>
+				<measure>IrVolgaSwaption.MResultV</measure>
+				
+				<measure>ADJUSTED_IRGAMMA_MRESULT.VECTOR_RESULT</measure>
+				<measure>ADJUSTED_IRGAMMA_MRESULTV.VECTOR_RESULTV</measure>
+				<measure>IrVannaCombine.VannaVolgaCombine</measure>
+
+				<measure>Finance_PnL_YTD.SUM</measure>  
+				<measure>Finance_PnLAdjusted_YTD.SUM</measure>  
+	
+				<measure>SixYearPLMeasure.Sum</measure>  
+				<measure>SixYearVaR.SUM</measure>  
+	 <!-- 
+	 			<measure>1DVaR.VECTOR_SUM</measure>
+	 			<measure>10DVaR.VECTOR_SUM</measure>
+	  -->
+
+			</grantedMeasures>
+		</subCubeProperties>
+
+		<!-- Drillthrough customisation -->
+		<import resource="DESC-INF/MarketRiskDrillthroughProperties.xml" />
+
+		<!-- Contextual options for the Pivolap query engine -->
+		<mdxContext>
+			<formatters>
+				<formatter uniqueName="[COB Date].[COB Date]" plugin="DATE"
+					pattern="dd-MM-yyyy" />
+				<formatter uniqueName="[VaR-Confidence Level].[VaR-Confidence Level]"
+					plugin="PERCENT" pattern="0.0%;-0.0%" />
+			</formatters>
+			<lightCrossJoinEnabled>false</lightCrossJoinEnabled>
+			<!-- usually let the UI manage that through visual total command and set this to false -->
+			<contextualTotalsEnabled>false</contextualTotalsEnabled>
+		</mdxContext>
+		<aliases>
+			<measures>
+				<measure name="contributors.COUNT" alias="count" />
+
+				<measure name="1DVaR.SUM" alias="1 day VaR" />
+				<measure name="PLScenario_1Day.Sum" alias="1 day PL Vector" />
+
+
+				<measure name="10DVaR.CONFIDENCE_OFFSET" alias="10 day VaR Offset" />
+				<measure name="1DVaR.CONFIDENCE_OFFSET" alias="1 day VaR Offset" />
+				<measure name="1DVaR.CHANGE_RESULT" alias="Change in 1 day VaR" />
+				<measure name="10DVaR.CHANGE_RESULT" alias="Change in 10 day VaR" />
+				<measure name="10DVaR.SUM" alias="10 day VaR" />
+				<measure name="PLScenario_10Day.Sum" alias="10 day PL Vector" />
+
+				<measure name="PLStressVAR.Sum" alias="Stress PL Vector" />
+				<measure name="StressVaR.SUM" alias="Stress VaR" />
+
+
+
+				<measure name="1DVar_Marginal.SUM" alias="1 day MVAR" />
+				<measure name="10DVar_Marginal.SUM" alias="10 day MVAR" />
+
+				<measure name="IVaR_1D.SUM" alias="1 day IVAR" />
+				<measure name="IVaR_10D.SUM" alias="10 day IVAR" />
+
+				<measure name="1DVaR_ETL.SUM" alias="1 day ETL" />
+				<measure name="10DVaR_ETL.SUM" alias="10 day ETL" />
+
+				<measure name="M_RESULTV.SUM" alias="M_RESULTV" />
+				<measure name="M_RESULT.SUM" alias="M_RESULT" />
+				<measure name="CHANGEIN_V.M_RESULTV" alias="Change in M_RESULTV" />
+				<measure name="CHANGEIN.M_RESULT" alias="Change in M_RESULT" />
+				<measure name="M_RESULT_DEALCCY.SUM" alias="M_RESULT (Deal CCY)" />
+				<measure name="M_RESULTV_DEALCCY.SUM" alias="M_RESULTV (Deal CCY)" />
+				<measure name="HypoPL_scenario_AUD.SUM" alias="Hypothetical P&amp;L" />
+				<measure name="HypoFxDir_AUD.SUM" alias="Hypo Attr FX Directional" />
+				<measure name="HypoEqDir.SUM" alias="Hypo Attr EQ Directional" />
+				<measure name="HypoEqVol.SUM" alias="Hypo Attr EQ Volatility" />
+				<measure name="HypoFxVol.SUM" alias="Hypo Attr FX Volatility" />
+				<measure name="HypoIRDir.SUM" alias="Hypo Attr IR Directional" />
+				<measure name="1DVaR_FXDir_AUD" alias="1 day VaR Attr FX Directional" />
+				<measure name="Utilisation.SUM" alias="Utilisation" />
+			<!-- 	<measure name="Limit.SUM" alias="Limit" /> -->
+
+				<measure name="1DVaR_EQD.SUM" alias="1 day VaR Attr EQ Directional" />
+				<measure name="1DVaR_EQV.SUM" alias="1 day VaR Attr EQ Volatility" />
+				<measure name="1DVaR_FXV.SUM" alias="1 day VaR Attr FX Volatility" />
+				<measure name="1DVaR_IRD.SUM" alias="1 day VaR Attr IR Directional" />
+				<measure name="1DVaR_Incremental.SUM" alias="1 day IVAR" />
+				<measure name="10DVaR_Incremental.SUM" alias="10 day IVAR" />
+				<measure name="Spread.Spread" alias="Calculated Spread" />
+
+				<measure name="CHANGEIN_SPREAD.CHANGEIN_SPREAD" alias="Change in Calculated Spread" />
+				<measure name="CHANGEIN_IRVEGA_CAPFLOOR.CHANGEIN_IRVEGA_CAPFLOOR"
+					alias="Change in IrVega CapFloor" />
+				<measure name="CHANGEIN_IRVEGA_SWAPTIONS.CHANGEIN_IRVEGA_SWAPTIONS"
+					alias="Change in IrVega Swaptions" />
+				<measure name="CHANGEIN_IRVEGA_ETO.CHANGEIN_IRVEGA_ETO"
+					alias="Change in IrVega Eto" />
+				<measure name="CALCDV01.DV01" alias="Calculated DV01" />
+				<measure name="FXDELGAMMA.VECTOR_RESULT" alias="FXO DG M_RESULT" />
+				<measure name="FXDELGAMMAV.VECTOR_RESULTV" alias="FXO DG M_RESULTV" />
+				<measure name="FXDELTA_CHANGEIN_V.M_RESULTV" alias="Change in FXO DG M_RESULTV" />
+				<measure name="FXDELTA_CHANGEIN.M_RESULT" alias="Change in FXO DG M_RESULT" />
+
+				<measure name="IrVegaCapFloor.IrVegaCapFloor" alias="IR Vega CapFloor" />
+				<measure name="IrVegaCombine.IrVegaCombine" alias="IR Vega Swaption ETO CF Combined" />
+				<measure name="IrVegaEto.IrVegaEto" alias="IR Vega ETO" />
+				<measure name="IrVegaSwaptions.IrVegaSwaptions" alias="IR Vega Swaption" />
+				<measure name="M_RESULT_LOT.SUM" alias="M_RESULT_LOT" />
+
+				<measure name="IRGAMMA_MRESULT.VECTOR_RESULT" alias="M_RESULT" />
+				<measure name="IRGAMMA_MRESULTV.VECTOR_RESULTV" alias="M_RESULT_V" />
+
+				<measure name="IrVolgaCapFloor.MResultV" alias="VolgaVanna-CapFloor" />
+				<measure name="IrVolgaEto.MResultV" alias="VolgaVanna-ETO" />
+				<measure name="IrVolgaSwaption.MResultV" alias="VolgaVanna-Swaption" />
+				
+				<measure name="ADJUSTED_IRGAMMA_MRESULT.VECTOR_RESULT"   alias="ADJUSTED_M_RESULT" />
+				<measure name="ADJUSTED_IRGAMMA_MRESULTV.VECTOR_RESULTV" alias="ADJUSTED_M_RESULT_V" />				
+				
+				<measure name="IrVannaCombine.VannaVolgaCombine" alias="IR VolgaVanna Swaption ETO CF Combined" />
+				
+
+				<measure name="Finance_PnL_YTD.SUM"         alias="Actual P&amp;L (YTD Average Exchange Rate)" />
+				<measure name="Finance_PnLAdjusted_YTD.SUM" alias="Actual P&amp;L (YTD Average Exchange Rate) Adjusted" />
+
+				<measure name="SixYearPLMeasure.Sum"       alias="VaR 1540 P&amp;L Vector" />
+				<measure name="SixYearVaR.SUM"             alias="VaR 1540 VaR" />
+				<!-- 
+				<measure name="1DVaR.VECTOR_SUM"           alias="1D Vector Agg" />
+				<measure name="10DVaR.VECTOR_SUM"          alias="10D Vector Agg" />
+				-->
+				
+				
+			</measures>
+		</aliases>
+	</sharedContexts>
+
+</pivotDescription>

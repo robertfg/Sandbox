@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+		<import resource="globalSettings.xml" />
+<!-- 	    <import resource="dbSettings.xml" /> -->
+	    
+<!-- IPV -->	    
+
+<!-- <import resource="businessUnitHierarchy.xml" /> -->
+ 
+<!-- END IPV -->
+<!-- 	<import resource="apSubCubeStatusUpdater.xml" /> -->
+		  
+<!-- AP to DB -->
+<!-- 	<import resource="apExtractBcp.xml" /> -->
+<!-- 	<import resource="apExtractBcpCmd.xml" /> -->
+
+<!-- END AP to DB -->	
+	
+<!-- APX transform -->   
+    
+    <import resource="apCache.xml" />		 	
+	<import resource="CsvTransposeConfig.xml" />
+	<import resource="vectorTransposeConfig.xml" />
+	<import resource="apFileVectorizer.xml" />
+	<import resource="apFileCsvTranspose.xml" />
+
+ <!-- APX Transform end  -->
+	
+<!-- 	<import resource="murexPositionExtract.xml" />  -->
+<!--  	<import resource="mreIssuer.xml" /> -->
+<!--  	<import resource="mreSecExtract.xml" /> -->
+
+  
+
+	
+<!-- 	    <import resource="murexHierarchyExtract.xml" /> -->
+<!-- 		<import resource="murexExDivExtract.xml"     />  -->
+	
+<!-- 		<import resource="murexRateExtract.xml"     />  -->
+<!-- 	 	<import resource="mrePnlActualExtract.xml" /> -->
+<!-- 	 	<import resource="mrePnlAdjustmentExtract.xml" /> -->
+<!-- 	 	<import resource="ApEquityDeltaGamma.xml" />   -->
+<!-- 	 	<import resource="ApParCreditDeltaCurve.xml" /> -->
+
+		
+
+
+	 	
+
+	
+</beans>
+
+
+ 

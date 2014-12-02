@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+   
+<util:properties id="mrePnlActualProperties"   location="classpath:resources/properties/mrePnlActualExtract.${env}.properties" />
+ 
+
+	<bean id="mrePnlActualExtractToDB" class="com.anz.rer.etl.mre.MrePnlLoader" scope="prototype">
+		<constructor-arg index="0" ref="mssqlDataSource" />
+		<constructor-arg index="1" value="1" />
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value="," />
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" />
+		<property name="insertThreshold" value="1000" />
+		<property name="fileResolver" ref="mrePnlActualExtractFileResolver" />
+		<property name="tableName" value="Staging.FactActualPnl" />
+		<property name="csvSourceLength" value="5" />
+		<property name="valiDateSql" value="select * from ETL.vw_Job where jobTypeID = '8' and status in ( 'Not Started','Failed' )" />
+		<property name="successStatus" value="Ready for Next Process"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="mrePnlActualExtractToDB" />
+		<property name="bussDate" value="2" />
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="mrePnlActualExtractFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="mrePnlActualProperties" />
+	</bean>
+
+     
+    <bean id="etlMrePnlActualCsvToTableProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor" scope="prototype">
+    	<constructor-arg index="0" ref="mrePnlActualProperties" />
+    	<property name="fileProcessor" ref="mrePnlActualExtractToDB" />
+    </bean>
+    
+   
+    <bean id="mrePnlActualtExtractDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="etlMrePnlActualCsvToTableProcessor" />
+	    <property name="interval"   	value="10000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="mrePnlActualtExtractDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+	
+	
+	
+	
+	
+</beans>	 

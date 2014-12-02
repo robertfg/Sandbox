@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<userRole xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="activepivot-types.xsd">
+	<pivotsRoles id="MarketRiskCube">
+		<subCubeProperties isAccessGranted="true">
+			<grantedMeasures />
+			<dimensionRestrictions>
+				<dimension name="Risk Portfolio Hierarchy">
+					<allowedMember>AllMember\ANZ Group\TradedCAPM\Combined Trading\Traded\LM Trading</allowedMember>
+				</dimension>
+			</dimensionRestrictions>
+		</subCubeProperties>
+	</pivotsRoles>
+</userRole>
