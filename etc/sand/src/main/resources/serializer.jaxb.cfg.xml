@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-
-<!-- Declare resources for our custom element XML bindings -->
-<properties>
-	<entry key="ActivePivot-Custom-ContextValues">pivot.customcontextvalues-jaxb-mapping.xml</entry>
-</properties>
