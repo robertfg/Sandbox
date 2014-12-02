@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+  default-lazy-init="false">
+  
+	<!-- *********************************************************** -->
+	<!-- * Configuration of the Registry * -->
+	<!-- *********************************************************** -->
+	<bean id="RegistryConfigurer"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod">
+			<value>com.quartetfs.fwk.Registry.setContributionProvider</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<ref bean="ContributionProvider" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Use the ClasspathContributionProvider -->
+	<bean id="ContributionProvider"
+		class="com.quartetfs.fwk.contributions.impl.ClasspathContributionProvider">
+		<constructor-arg>
+			<list>
+				<value>com.quartetfs</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- Dimensions -->
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="VAR_SCENARIO_DIM" />
+		<property name="psrDetail" ref="psrDetail" />
+	</bean>
+
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="VAR_SCENARIO_DATE" />
+		<property name="dateService" ref="dateService" />
+	</bean>
+
+
+
+	<!-- PostProcessors -->
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.postprocessing.IPostProcessor" />
+		<constructor-arg index="1" value="VAR_SCENARIO_PP" />
+		<property name="psrService" ref="psrService" />
+		<property name="psrDetail" ref="psrDetail" />
+		<property name="dateService" ref="dateService" />
+	</bean>
+	
+
+	
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"	value="com.quartetfs.biz.pivot.postprocessing.IPostProcessor" />
+		<constructor-arg index="1" value="VECTOR_DISPLAY_PP" />
+		<property name="vectorLabelService" ref="vectorLabelService" />
+	</bean>
+	
+
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.postprocessing.IPostProcessor" />
+		<constructor-arg index="1" value="CHANGE_RESULT" />
+		<property name="dateService" ref="dateService" />
+	</bean>
+	
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector" factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="ANZ_VECTOR_ANALYSIS_DIM" />
+		<property name="vectorLabelService" ref="vectorLabelService" />
+	</bean>
+	
+	<bean id="propreader" class="com.quartetfs.pivot.anz.utils.JVMPropertiesReader">
+		<property name="resource" value="classpath:/properties/jvmsystem.properties" />		
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="propreader"/>		
+		<property name="targetMethod" value="applyProperties" />	
+	</bean>
+	
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="VAR_STRESS_SCENARIO_DATE" />
+		<property name="dateService" ref="dateService" />
+	</bean>
+
+
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="VAR_STRESS_SCENARIO_DIM" />
+		<property name="psrDetail" ref="psrDetail" />
+	</bean>
+
+
+
+
+
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector" 	factory-method="createInstance">
+		<constructor-arg index="0" 	value="com.quartetfs.biz.pivot.postprocessing.IPostProcessor" />
+		<constructor-arg index="1" value="MEASURE_LIMIT" />
+		<property name="limitMasterData" ref="LimitMasterData" />
+		<property name="limitResolver" ref="LimitLocationResolver" />				
+	</bean>
+
+
+	<bean class="com.quartetfs.fwk.types.impl.ExtendedPluginInjector"
+		factory-method="createInstance">
+		<constructor-arg index="0"
+			value="com.quartetfs.biz.pivot.cube.hierarchy.IDimension" />
+		<constructor-arg index="1" value="VAR_SIX_YEAR_SCENARIO_DATE" />
+		<property name="dateService" ref="dateService" />
+	</bean>
+
+
+</beans> 

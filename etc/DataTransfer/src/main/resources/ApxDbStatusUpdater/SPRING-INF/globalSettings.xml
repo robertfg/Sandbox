@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<util:properties id="globalProperties" location="classpath:resources/properties/CsvToTable.${env}.properties" />
+
+	<bean id="globalPropertiesSolver" class="com.anz.rer.etl.utils.PropertiesSolver">
+		<property name="sourceProperties" ref="globalProperties" />
+	</bean>
+
+        
+    <bean id="globalProps" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:resources/properties/CsvToTable.${env}.properties</value>
+ 				<value>classpath:resources/properties/apSubCubeStatusUpdater.${env}.properties</value> 
+			</list>
+		</property> 
+	</bean>
+  
+	
+  
+
+
+	
+	
+	
+	
+</beans>

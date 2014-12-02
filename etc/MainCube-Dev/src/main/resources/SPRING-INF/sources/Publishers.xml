@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- Define the Key -->
+	<bean id="ptKeyExtractor" class="com.quartetfs.biz.pivot.server.impl.PointKeyExtractor">
+		<constructor-arg>
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2/dealNum</value>
+				<value>2/date</value>
+				<value>2/portfolio</value>
+				<value>2/baseCCY</value> 
+				<value>2/family</value>
+				<value>2/group</value>
+				<value>2/type</value>
+				<value>2/instrument</value>
+				<value>2/mcurr</value>
+				<value>2/attributes/correctionFlag</value>
+				
+			<!-- 	<value>2/attributes/counterpart</value>
+			--> 
+			</list>
+		</constructor-arg>
+	</bean>
+    
+    <bean id="pointDictionary" class="com.quartetfs.tech.dictionary.impl.PointDictionary"/>
+    <bean id="keyGen" class="com.quartetfs.pivot.anz.utils.KeyGenerator" />
+    
+    
+     <bean id="anzCreditStressKeyExtractor" class="com.quartetfs.biz.pivot.server.impl.PointKeyExtractor">
+		<constructor-arg>
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2/dealNum</value>
+				<value>2/date</value>
+				<value>2/portfolio</value>
+				<value>2/baseCCY</value> <!--  index:7 plcur: basecurrency -->
+				<value>2/family</value>  
+				<value>2/group</value>
+				<value>2/type</value>
+				<value>2/instrument</value>
+				<value>2/mcurr</value>     <!-- deal curr index:6 -->
+				<value>2/attributes/correctionFlag</value>
+				<value>2/currency</value>  <!-- underlying curr -->
+				<value>2/attributes/term</value>  
+				<value>2/attributes/rating</value>  
+			</list>
+		</constructor-arg>
+	</bean>
+	
+    
+    <bean id="fxoDelGamaKeyExtractor" class="com.quartetfs.biz.pivot.server.impl.PointKeyExtractor">
+		<constructor-arg>
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2/dealNum</value>
+				<value>2/date</value>
+				<value>2/portfolio</value>
+				<value>2/baseCCY</value> <!--  index:7 plcur: basecurrency -->
+				<value>2/family</value>  
+				<value>2/group</value>
+				<value>2/type</value>
+				<value>2/instrument</value>
+				<value>2/mcurr</value>     <!-- deal curr index:6 -->
+				<value>2/attributes/correctionFlag</value>
+				<value>2/currency</value>  <!-- underlying curr -->
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="irGammaKeyExtractor" class="com.quartetfs.biz.pivot.server.impl.PointKeyExtractor">
+		<constructor-arg>
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2/dealNum</value>
+				<value>2/date</value>
+				<value>2/portfolio</value>
+				<value>2/baseCCY</value> <!--  index:7 plcur: basecurrency -->
+				<value>2/family</value>  
+				<value>2/group</value>
+				<value>2/type</value>
+				<value>2/instrument</value>
+				<value>2/mcurr</value>     <!-- deal curr index:6 -->
+				<value>2/attributes/correctionFlag</value>
+				<value>2/currency</value>  <!-- underlying curr -->
+				<value>2/attributes/rskLabel1</value>  
+				<value>2/attributes/term</value>  
+				<value>2/attributes/termBucket</value>  
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	
+	
+
+	<!-- Sensitivities Publisher -->
+	<bean id="sensitivitiesPublisher"
+		class="com.quartetfs.pivot.anz.source.publisher.impl.SensitivitiesPublisher">
+		<property name="name" value="${marketRiskSchemaName}" />
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="psrDetail" ref="psrDetail"/>
+		<property name="counter" ref="keyGen" />
+	</bean>
+
+
+
+	<!-- VaR publisher setup -->
+	<bean id="varPublisher"
+		class="com.quartetfs.pivot.anz.source.publisher.impl.VaRPublisher">
+		<constructor-arg>
+			<ref bean="psrDetail" />
+		</constructor-arg>
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="schemaName" value="${marketRiskSchemaName}" />
+		<property name="keyExtractor" ref="ptKeyExtractor" />
+		<property name="pointDictionary" ref="pointDictionary"/>
+	</bean>
+	
+	<bean id="fxoVectorPublisher"
+		class="com.quartetfs.pivot.anz.source.publisher.impl.VectorPublisher">
+		<constructor-arg>
+			<ref bean="psrDetail" />
+		</constructor-arg>
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="schemaName" value="${marketRiskSchemaName}" />
+		<property name="keyExtractors">
+			<map>
+				<entry key="SFDG0" value-ref="fxoDelGamaKeyExtractor"/>
+				<entry key="SFDG1" value-ref="fxoDelGamaKeyExtractor"/>
+				<entry key="SIGM0" value-ref="irGammaKeyExtractor"/>
+				<entry key="SIGM1" value-ref="irGammaKeyExtractor"/>
+			</map>
+		</property>
+		<property name="counter" ref="keyGen" />
+		<property name="pointDictionary" ref="pointDictionary"/>
+	</bean>	
+
+	
+
+<bean id="insertUpdatePublisher"
+		class="com.quartetfs.pivot.anz.source.publisher.impl.PsrInsertUpdatePublisher">
+		<constructor-arg>
+			<ref bean="psrDetail" />
+		</constructor-arg>
+		
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="schemaName" value="${marketRiskSchemaName}" />
+		<property name="keyExtractor" ref="anzCreditStressKeyExtractor" />
+		<property name="counter" ref="keyGen" />
+		
+		<property name="pointDictionary" ref="pointDictionary"/>
+		<property name="psrToBeProcessList">
+			<set>
+					<value>TAZC0</value>
+					<value>TAZC1</value>
+			</set>
+		</property>
+		
+		<property name="msrToAggregate">
+			<map>
+				<entry key="result" value="30"/>
+				<entry key="resultV" value="31"/>
+				
+			</map>
+		</property>
+		
+		<property name="readerPatternMapping">
+			<map>
+				<entry key="psrName" value="27"/>
+				<entry key="result" value="30"/>
+				<entry key="resultV" value="31"/>
+				
+			
+			</map>
+		
+		</property>
+		
+			
+	</bean>	
+
+
+	 
+</beans>

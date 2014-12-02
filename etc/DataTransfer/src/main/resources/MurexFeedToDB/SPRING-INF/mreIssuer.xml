@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+   <util:properties id="mreIssuerProperties"   location="classpath:resources/properties/mreIssuer.${env}.properties" />
+ 
+
+	<bean id="mreIssuerExtractToDB" class="com.anz.rer.etl.csvloader.CsvLoader">
+		<constructor-arg index="0" ref="mssqlDataSource" />
+		<constructor-arg index="1" value="0" /> <!-- number of thread processor -->
+		
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value=";" />
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" /> <!-- (\r\n|\r|\n|\n\r) combination for crlf -->
+		<property name="insertThreshold" value="2500" />
+		<property name="fileResolver" ref="mreIssuerExtractFileResolver" />
+		
+		<property name="tableName" value="Staging.ST_SECISS_REP" />
+		<property name="postProcSql" value="{call DW.LoadIssuerFeed (?)}" />
+  
+		<property name="csvSourceLength" value="29" />
+		<property name="valiDateSql">		
+		  <value><![CDATA[select JobID, MurexVersion from etl.vw_Job where JobTypeID in(11) and Status in('Not Started','Failed')]]></value>
+		</property>
+		
+		<property name="successStatus" value="Complete"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="mreIssuer" />
+		<property name="bussDate" value="2" />
+		<property name="bussDateSplitDelimeter" value="_" />
+		  
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="mreIssuerExtractFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="mreIssuerProperties" />
+	</bean>
+
+     
+    <bean id="mreIssuerCsvToTableProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="mreIssuerProperties" />
+    	<property name="fileProcessor" ref="mreIssuerExtractToDB" />
+    </bean>
+    
+   
+    <bean id="mreIssuerExtractDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="mreIssuerCsvToTableProcessor" />
+	    <property name="interval"   	value="20000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="mreIssuerExtractDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

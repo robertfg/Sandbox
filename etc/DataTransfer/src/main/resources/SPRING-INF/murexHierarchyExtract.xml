@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+   <util:properties id="murexHierarchyProperties"   location="classpath:resources/properties/murexHierarchyExtract.${env}.properties" />
+   
+   <!-- using the default fileResolver implementation -->
+    <bean id="murexHierarchyFileResolver" class="com.anz.rer.etl.directory.impl.DirectoryFileResolver">
+		<constructor-arg index="0" ref="murexHierarchyProperties" />
+		<property name="inPattern" value="ddMMyy" />
+		<property name="srcPattern" value="yyyyMMdd"/>  <!-- database date format  -->
+		<property name="outPattern" value="${etl.csvToTable.src.fileName.appendDate.format}"/>  <!-- filename date format  -->
+		<property name="cobDateService" ref="CobDateService" />
+	</bean>
+ 
+	 <!--  create IFileProcessor implementation -->  
+	<bean id="murexHierarchyToDB" class="com.anz.rer.etl.mxHierarchy.MxHierarchyImpl">
+		<constructor-arg ref="mssqlDataSource" />
+		<property name="delimeter" value=";" />
+		<property name="insertThreshold" value="1000" />
+		<property name="fileResolver" ref="murexHierarchyFileResolver" />
+		<property name="skipFirstLine" value="true" />
+		<property name="txManager" ref="transactionManager" />
+		<property name="hierarchyTypeMap">
+			<map>
+				<entry key="LEGAL_ENTITY"  value="9" />
+			</map>
+		</property>
+	</bean>
+	 
+    <!--  create IFileProcessor -->    
+    <bean id="murexHierarchyFileProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="murexHierarchyProperties" />
+    	<property name="fileProcessor" ref="murexHierarchyToDB" />
+    </bean>
+    
+   <!--  using default directory watcher-->
+    <bean id="murexHierarchyDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="murexHierarchyFileProcessor" />
+	    <property name="interval"   	value="1000"/> 
+    </bean>
+ 
+    <!-- starting the directory watcher -->
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="murexHierarchyDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

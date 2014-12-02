@@ -1,0 +1,700 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.anz.rer.etl</groupId>
+	<artifactId>MxToRWH</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0</version>
+	<name>MxToRWH</name>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+   <!-- mvn clean install -P ApxDbStatusUpdater -DyourENV=dev  -->
+
+	<!-- Apply for all environment -->
+	<build>
+	    <finalName>mx</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.4.1</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.1</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- ANZ: Use mvn package -P <env> [-o] in folder that contains this pom.xml. 
+		-o will cause maven run in offline mode (no jar dependencies download) -->
+	<profiles>
+
+		<!-- ANZ: <env>:dev Profile for Development Env. (only src/main/config 
+			path differs it from Prod Env) -->
+		<profile>
+			<id>MurexFeedToDB</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<defaultGoal>install</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- ANZ: Define /config folder in JAR (reason of profiles needed) -->
+							<execution>
+								<id>copy-MurexFeedToDB</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/MurexFeedToDB</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>bcpConfig/*</include>
+												<include>properties/*.properties</include>
+												<include>SPRING-INF/*</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-MurexFeedToDB1</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>sqljdbc_auth.dll</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-MurexFeedToDB-log</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/MurexFeedToDB</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>log4j.properties</include>
+											</includes>
+											<excludes>
+												<exclude>log4j.APtoDB.properties</exclude>
+												<exclude>log4j.ApDataTranspose.properties</exclude>
+												<exclude>log4j.ApxDbStatusUpdater.properties</exclude>
+											</excludes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-MurexFeedToDB-batchFile</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/MurexFeedToDB</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>deploymentBatch.bat</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+						<warName>mx-MurexFeedToDB</warName>
+					</configuration>
+				</plugin>
+		
+				</plugins>
+			</build>
+		</profile>
+
+
+		<profile>
+			<id>ApToDB</id>
+			<build>
+				<defaultGoal>install</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- ANZ: Define /config folder in JAR (reason of profiles needed) -->
+							<execution>
+								<id>copy-ApToDB</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/ApToDB</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>bcpConfig/*</include>
+												<include>properties/*.${yourENV}.properties</include>
+												<include>SPRING-INF/*</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+							<execution>
+								<id>copy-ApToDB-log</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>log4j.properties</include>
+											</includes>
+											<excludes>
+												<exclude>log4j.MurexFeedToDB.properties</exclude>
+												<exclude>log4j.ApDataTranspose.properties</exclude>
+												<exclude>log4j.ApxDbStatusUpdater.properties</exclude>
+											</excludes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+						</executions>
+					</plugin>
+					
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+						<warName>mx-APtoDB</warName>
+					</configuration>
+				</plugin>
+		
+				</plugins>
+			</build>
+		</profile>
+		
+		
+		<profile>
+			<id>ApDataTranspose</id>
+			<build>
+				<defaultGoal>install</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- ANZ: Define /config folder in JAR (reason of profiles needed) -->
+							<execution>
+								<id>copy-ApDataTranspose</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/ApDataTranspose</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>bcpConfig/*</include>
+												<include>properties/*.${yourENV}.properties</include>
+												<include>SPRING-INF/*</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-ApDataTranspose-log</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>log4j.properties</include>
+											</includes>
+											<excludes>
+												<exclude>log4j.MurexFeedToDB.properties</exclude>
+												<exclude>log4j.ApToDB.properties</exclude>
+												<exclude>log4j.ApxDbStatusUpdater.properties</exclude>
+											</excludes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+						</executions>
+					</plugin>
+					
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+						<warName>mx-ApDataTranspose</warName>
+					</configuration>
+				</plugin>
+		
+				</plugins>
+			</build>
+		</profile>
+		
+			<profile>
+			<id>ApxDbStatusUpdater</id>
+			<build>
+				<defaultGoal>install</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- ANZ: Define /config folder in JAR (reason of profiles needed) -->
+							<execution>
+								<id>copy-ApxDbStatusUpdater</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/ApxDbStatusUpdater</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>bcpConfig/*</include>
+												<include>properties/*.${yourENV}.properties</include>
+												<include>SPRING-INF/*</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-ApxDbStatusUpdater-log</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${basedir}/target/classes</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>log4j.properties</include>
+											</includes>
+											<excludes>
+											<exclude>log4j.MurexFeedToDB.properties</exclude>
+											<exclude>log4j.ApDataTranspose.properties</exclude>
+											<exclude>log4j.ApToDB.properties</exclude>
+											</excludes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+						</executions>
+					</plugin>
+					
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+						<warName>mx-ApxDbStatusUpdater</warName>
+					</configuration>
+				</plugin>
+		
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+	<dependencies>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-asm</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensymphony.quartz</groupId>
+			<artifactId>quartz-all</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>3.0.5.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-core</artifactId>
+			<version>2.1.6.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-infrastructure</artifactId>
+			<version>2.1.6.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-test</artifactId>
+			<version>2.1.6.RELEASE</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensymphony.quartz</groupId>
+			<artifactId>quartz-all</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+	
+		<dependency>
+			<groupId>microsoft</groupId>
+			<artifactId>sqljdbc</artifactId>
+			<version>4</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>7.2.0.v20101020</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>7.2.0.v20101020</version>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.1</version>
+		</dependency>
+            
+			<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.apache.cxf</groupId> -->
+<!-- 		<artifactId>cxf-archetypes</artifactId> -->
+<!-- 		<version>2.5.2</version> -->
+<!-- 	</dependency> -->
+
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.apache.cxf</groupId> -->
+<!-- 		<artifactId>cxf-rt-frontend-jaxws</artifactId> -->
+<!-- 		<version>2.5.2</version> -->
+<!-- 	</dependency> -->
+	
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.apache.cxf</groupId> -->
+<!-- 		<artifactId>cxf-rt-transports-http</artifactId> -->
+<!-- 		<version>2.5.2</version> -->
+<!-- 	</dependency> -->
+	
+<!-- 	Jetty is needed if you're are not using the CXFServlet -->
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.apache.cxf</groupId> -->
+<!-- 		<artifactId>cxf-rt-transports-http-jetty</artifactId> -->
+<!-- 		<version>2.5.2</version> -->
+<!-- 	</dependency>    -->
+
+	<dependency>
+		<groupId>org.apache.cxf</groupId>
+		<artifactId>cxf-bundle-minimal</artifactId>
+		<version>2.6.1</version>
+	</dependency>
+     
+    <dependency>
+      <groupId>org.directmemory</groupId>
+      <artifactId>DirectMemory-Cache</artifactId>
+      <version>0.5.5-SNAPSHOT</version>
+  	</dependency>
+     
+     <dependency>
+		<groupId>net.sourceforge.jtds</groupId>
+		<artifactId>jtds</artifactId>
+		<version>1.2.4</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-collections</groupId>
+		<artifactId>commons-collections</artifactId>
+		<version>3.2</version>
+	</dependency>                        
+</dependencies>
+
+	<repositories>
+		<!-- <repository> -->
+		<!-- <id>dojo</id> -->
+		<!-- <name>Dojo Maven Repository</name> -->
+		<!-- <url>http://download.dojotoolkit.org/maven2/</url> -->
+		<!-- <layout>default</layout> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>false</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </repository> -->
+		<!-- <repository> -->
+		<!-- <id>codehaus</id> -->
+		<!-- <name>Codehaus</name> -->
+		<!-- <layout>default</layout> -->
+		<!-- <url>http://repository.codehaus.org</url> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>false</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </repository> -->
+		<!-- <repository> -->
+		<!-- <id>maven2-repository.dev.java.net</id> -->
+		<!-- <name>Java.net Repository for Maven</name> -->
+		<!-- <url>http://download.java.net/maven/2/</url> -->
+		<!-- <layout>default</layout> -->
+		<!-- </repository> -->
+		<!-- <repository> -->
+		<!-- <id>www.mvnsearch.org</id> -->
+		<!-- <name>www.mvnsearch.org</name> -->
+		<!-- <url>http://www.mvnsearch.org/maven2/</url> -->
+		<!-- <layout>default</layout> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>false</enabled> -->
+		<!-- </snapshots> -->
+		<!-- </repository> -->
+		
+<!-- 		 <repository> -->
+<!-- 			<id>repo</id> -->
+<!-- 			<name>DirectMemory Snapshots Repository</name> -->
+<!-- 			<url>https://raw.github.com/raffaeleguidi/DirectMemory/master/Misc/mvn-repo/snapshots/</url> -->
+<!-- 		 </repository> -->
+
+	</repositories>
+
+
+</project>

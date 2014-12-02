@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    
+   
+<util:properties id="mxRateProperties"   location="classpath:resources/properties/mxRateExtract.${env}.properties" />
+ 
+
+	<bean id="mxRateExtractToDB" class="com.anz.rer.etl.mxRate.MxRateLoader">
+		<constructor-arg index="0" ref="mssqlDataSource" />
+		<constructor-arg index="1" value="0" />
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value=";" />
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" />
+	
+		<property name="insertThreshold" value="1000" />
+		<property name="fileResolver" ref="mxRateExtractFileResolver" />
+		<property name="tableName" value="Staging.DailyFxRate" />
+		<property name="postProcSql" value="{call [DW].[LoadDailyFXRate]}" />
+		<property name="csvSourceLength" value="11" />
+		
+		<property name="valiDateSql">
+			<value><![CDATA[select JobID from etl.vw_Job where JobTypeID in(2) and Status in('Not Started','Failed')]]></value>
+		</property>
+		
+		<property name="successStatus" value="Ready for Cache"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="mxRateExtractToDB" />
+		
+		<property name="bussDate" value="1" />	
+		<property name="bussDateSplitDelimeter" value="\." />
+			
+	</bean>
+
+
+   <!-- using default implementation of FileResolver -->
+	<bean id="mxRateExtractFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="mxRateProperties" />
+	</bean>
+     
+    <bean id="mxRateCsvToTableProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="mxRateProperties" />
+    	<property name="fileProcessor" ref="mxRateExtractToDB" />
+    </bean>
+    
+   
+    <bean id="mxRateExtractDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="mxRateCsvToTableProcessor" />
+	    <property name="interval"   	value="10000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="mxRateExtractDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

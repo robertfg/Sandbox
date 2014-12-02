@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+	
+
+	
+	<!-- VaR PSR description used by the VaR publisher and some PP -->
+	<import resource="classpath:SPRING-INF/services/PSRDetail.xml" />
+	
+	<bean id="psrService" class="com.quartetfs.pivot.anz.service.impl.PSRService"/>
+	<bean id="dateService" class="com.quartetfs.pivot.anz.service.impl.DateService" />
+	
+	<bean id="QueryHelper" class="com.quartetfs.pivot.anz.utils.QueryHelper">
+		<constructor-arg ref="ActivePivotManager" />
+		<constructor-arg value="${marketRiskCubeName}" />				
+	</bean>
+		
+	<bean id="valueHolderService" class="com.quartetfs.pivot.anz.service.impl.ValueHolderService">
+		<constructor-arg index="0" value="${scenario.densePattern}" />
+		<property name="varPSR" ref="psrDetail"/>
+		<property name="varVectorLength">
+			<map>
+				<entry key="VAR_STRESS" value="261" />
+				<entry key="UAT_VAR_STRESS" value="261" />
+				<entry key="VAR_1500"   value="1540" />
+				
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cubeEventKeeper" class="com.quartetfs.pivot.anz.utils.CubeEventKeeper"/>
+
+	
+
+	<bean id="jmxAttributeSource"
+		class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+
+	<!-- will create management interface using annotation metadata -->
+	<bean id="assembler"
+		class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+		<property name="attributeSource" ref="jmxAttributeSource" />
+	</bean>
+
+	<!-- will pick up the ObjectName from the annotation -->
+	<bean id="namingStrategy"
+		class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+		<property name="attributeSource" ref="jmxAttributeSource" />
+	</bean>
+
+
+</beans>

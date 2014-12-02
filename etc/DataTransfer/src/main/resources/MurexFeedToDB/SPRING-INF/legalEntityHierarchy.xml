@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   <util:properties id="legalEntityHierarchyProperties"   location="classpath:resources/properties/legalEntityHierarchy.${env}.properties" />
+ 
+	<bean id="legalEntityHierarchyDB" class="com.anz.rer.etl.csvloader.CsvLoader"> 
+	
+		<constructor-arg index="0" ref="mssqlDataSource" /> <!-- sql datasource -->
+		<constructor-arg index="1" value="0" /> <!-- numberr of threads -->
+		
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value=";" /> <!-- \s*("[^"]*"|[^|,]*)\s* --><!-- for grouping pattern --> 
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" /> <!-- (\r\n|\r|\n|\n\r) combination for crlf -->
+		<property name="insertThreshold" value="2500" />
+		<property name="fileResolver" ref="legalEntityHierarchyFileResolver" />
+		
+
+		<property name="tableName" value="Staging.LegalEntity" />
+		<property name="postProcSql" value="{call DW.LoadLegalEntityHierarchy (?)}" />
+		
+		<property name="csvSourceLength" value="7" />
+
+		<property name="valiDateSql">
+		  <value><![CDATA[select JobID from etl.vw_Job where JobTypeID in(26) and Status in('Not Started','Failed')]]></value>
+		</property>
+		
+		<property name="successStatus" value="Complete"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="legalEntityHierarchyDB" />
+		<property name="bussDate" value="3" />
+		<property name="bussDateSplitDelimeter" value="_" />
+		<property name="jobIdLocation" value="5" />
+		
+		
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="legalEntityHierarchyFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="legalEntityHierarchyProperties" />
+	</bean>
+
+     
+    <bean id="legalEntityHierarchyCsvToTableDirectoryProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor">
+    	<constructor-arg index="0" ref="legalEntityHierarchyProperties" />
+    	<property name="fileProcessor" ref="legalEntityHierarchyDB" />
+    </bean>
+    
+   
+    <bean id="legalEntityHierarchyDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="legalEntityHierarchyCsvToTableDirectoryProcessor" />
+	    <property name="interval"   	value="20000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="legalEntityHierarchyDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+</beans>	 

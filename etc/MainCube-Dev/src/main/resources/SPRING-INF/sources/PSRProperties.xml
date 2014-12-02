@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+
+	<bean id="psrFileTriggerProperties" factory-bean="globalPropertiesSolver"
+		factory-method="solveProperties">
+		<constructor-arg>
+			<util:properties location="classpath:properties/PSRFileTrigger.properties" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="psrParsingManagerProperties" factory-bean="globalPropertiesSolver"
+		factory-method="solveProperties">
+		<constructor-arg>
+			<util:properties location="classpath:properties/PSRFeeder.properties" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="PSRPublisherConfigInfo" class="com.quartetfs.pivot.anz.datasource.impl.PSRPublisherConfigInfo">
+		<!-- <constructor-arg value="${transactionQueueSize:30}"/>
+		<constructor-arg value="${batchExipreTimeInSecond:30}"/>
+		<constructor-arg value="${batchRowSize:5000}"/>
+		<constructor-arg value="${batchQueueSize:30}"/>
+		<constructor-arg value="${maxBatchRowSize:50000}"/>
+		 -->
+		<constructor-arg value="${transactionQueueSize:30000}"/>
+		<constructor-arg value="${batchExipreTimeInSecond:0}"/>
+		<constructor-arg value="${batchRowSize:5000}"/>
+		<constructor-arg value="${batchQueueSize:30000}"/>
+		<constructor-arg value="${maxBatchRowSize:50000}"/>
+		
+	</bean>
+	
+
+</beans>

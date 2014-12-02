@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<!-- CleanerTriggerProperties -->
+	<bean id="CleanerTriggerProperties" factory-bean="globalPropertiesSolver"
+		factory-method="solveProperties">
+		<constructor-arg>
+			<util:properties location="classpath:properties/CleanerTrigger.properties" />
+		</constructor-arg>
+	</bean>
+
+	<!-- CubeCleaner -->
+	<bean id="CubeCleaner" class="com.quartetfs.pivot.anz.service.impl.CubeCleaner">
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="schemaName" value="${marketRiskSchemaName}" />
+
+		<property name="varPsrIndex">
+			<map>
+				<entry key="V1AL0" value="4" /><!-- VaR 1D AUD -->
+				<entry key="V1AL1" value="4" /><!-- VaR 1D NZD -->
+				<entry key="VXAL0" value="5" /><!-- VaR 10D AUD -->
+				<entry key="VXAL2" value="5" /><!-- VaR 10D NZD -->
+				<entry key="B1AL0" value="6" /><!-- Hypo P&L AUD -->
+				<entry key="B1AL1" value="6" /><!-- Hypo P&L AUD -->
+				<entry key="B1AL2" value="6" /><!-- Hypo P&L AUD -->
+				<entry key="B1AL3" value="6" /><!-- Hypo P&L AUD -->
+				<entry key="V1FX0" value="7" /><!-- 1d VaR Attr FX Directional, 
+					AUD base -->
+				<entry key="B1EQ0" value="8" /><!-- Hypo Attr EQ Directional -->
+				<entry key="B1EV0" value="9" /><!-- Hypo Attr EQ Volatility -->
+				<entry key="B1FX0" value="10" /><!-- Hypo Attr FX Directional, 
+					AUD Base -->
+				<entry key="B1FV0" value="11" /><!-- Hypo Attr FX Volatility -->
+				<entry key="B1IR0" value="12" /><!-- Hypo Attr IR Directional -->
+			</map>
+		</property>
+
+	</bean>
+	<!-- init CubeCleaner -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="CubeCleaner" />
+		<property name="targetMethod" value="init" />
+		<property name="arguments" ref="CleanerTriggerProperties" />
+	</bean>
+
+
+	<!-- CleanerCoordinator -->
+	<bean id="CleanerCoordinator" class="com.quartetfs.pivot.anz.service.impl.CleanerCoordinator">
+		<property name="cubeCleaner" ref="CubeCleaner" />
+		<property name="eventKeeper" ref="cubeEventKeeper" />
+	</bean>
+
+	<!-- CleanerTrigger -->
+	<bean id="CleanerTrigger" class="com.quartetfs.fwk.messaging.impl.DirectoryFileWatcher" />
+
+	<!-- init CleanerTrigger -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="CleanerTrigger" />
+		<property name="targetMethod" value="init" />
+		<property name="arguments" ref="CleanerTriggerProperties" />
+	</bean>
+
+	<!-- add CleanerCoordinator as listener to CleanerTrigger -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="CleanerTrigger" />
+		<property name="targetMethod" value="addListener" />
+		<property name="arguments" ref="CleanerCoordinator" />
+	</bean>
+
+	<!-- start CleanerTrigger -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="CleanerTrigger" />
+		<property name="targetMethod" value="start" />
+	</bean>
+</beans>

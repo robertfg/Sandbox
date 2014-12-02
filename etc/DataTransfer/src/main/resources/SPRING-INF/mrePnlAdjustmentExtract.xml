@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+   
+<util:properties id="mrePnlAdjustmentProperties"   location="classpath:resources/properties/mrePnlAdjustmentExtract.${env}.properties" />
+ 
+ 	<bean id="mrePnlAdjustmentExtractToDB" class="com.anz.rer.etl.mre.MrePnlLoader" scope="prototype">
+		<constructor-arg index="0" ref="mssqlDataSource" />
+		<constructor-arg index="1" value="1" />
+		
+		<property name="skipFirstLine" value="true" />
+		<property name="delimeter" value="," />
+		<property name="rowDelimeter" value="(\r\n|\r|\n|\n\r)" />
+		<property name="insertThreshold" value="1000" />
+		<property name="fileResolver" ref="mrePnlAdjustmentExtractFileResolver" />
+		<property name="tableName" value="Staging.FactActualPnlAdjustment" />
+		<property name="postProcSql" value="{call [DW].[LoadFactActualPnl]}" />
+		<property name="csvSourceLength" value="5" />
+		<property name="valiDateSql">
+		<value><![CDATA[select * from(select *, (select JobID from etl.vw_Job where JobTypeID in(8) and Status in('Ready for Next Process') 
+ 					and BusinessDate = j.businessDate) dep  from etl.vw_Job j where JobTypeID in(9)  ) x where len(x.dep) > 0
+ 					and Status in('Not Started','Failed')]]>
+ 		</value>
+ 		</property>
+		<property name="successStatus" value="Complete"/>
+		<property name="dbUtils" ref="dbUtils"/>
+		<property name="name" value="mrePnlAdjustmentExtractToDB" />
+		<property name="bussDate" value="2" />
+		
+	</bean>
+	
+   <!-- using default implementation of FileResolver -->
+	<bean id="mrePnlAdjustmentExtractFileResolver" class="com.anz.rer.etl.directory.impl.PatternFileResolver">
+		<constructor-arg index="0" ref="mrePnlAdjustmentProperties" />
+	</bean>
+
+     
+    <bean id="etlmrePnlAdjustmentCsvToTableProcessor" class="com.anz.rer.etl.directory.impl.DirectoryFileProcessor" scope="prototype">
+    	<constructor-arg index="0" ref="mrePnlAdjustmentProperties" />
+    	<property name="fileProcessor" ref="mrePnlAdjustmentExtractToDB" />
+    </bean>
+    
+   
+    <bean id="mrePnlAdjustmenttExtractDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="etlmrePnlAdjustmentCsvToTableProcessor" />
+	    <property name="interval"   	value="50000"/> 
+    </bean>
+ 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="mrePnlAdjustmenttExtractDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+	
+	
+	
+	
+	
+</beans>	 

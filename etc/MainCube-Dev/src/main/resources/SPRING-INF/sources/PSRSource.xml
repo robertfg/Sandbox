@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<import resource="classpath:SPRING-INF/sources/PSRProperties.xml" />
+	<import resource="classpath:SPRING-INF/sources/PSRMisc.xml" />
+	<import resource="classpath:SPRING-INF/sources/Publishers.xml" />
+	<import resource="classpath:SPRING-INF/sources/RefdateFileWatcher.xml" />
+	<import resource="classpath:SPRING-INF/sources/PSRTranslator.xml" />
+	<import resource="classpath:SPRING-INF/sources/PSRFeeder.xml" />
+	<import resource="classpath:SPRING-INF/sources/PSRFileWatcher.xml" />
+	<import resource="classpath:SPRING-INF/sources/Monitor.xml" />
+
+	<bean class="org.springframework.jmx.export.MBeanExporter"
+		lazy-init="false">
+		<property name="beans">
+			<map>
+				<entry key="anz:name=PublisherConfig" value-ref="PSRPublisherConfigInfo" />
+				<entry key="anz:name=TransactionMonitor" value-ref="TransactionMonitor" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- Source parsing the VR files -->
+	<bean id="PSRSource" class="com.quartetfs.fwk.messaging.impl.CSVSource">
+		<property name="CSVWatchers">
+			<map>
+				<entry key-ref="PSRFileWatcher" value-ref="PSRTranslator" />
+			</map>
+		</property>
+	</bean>
+
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="PSRSource" />
+		<property name="targetMethod" value="addSourceListener" />
+		<property name="arguments" ref="PSRFeeder" />
+	</bean>
+
+
+	<bean class="com.quartetfs.fwk.impl.AgentStarter">
+		<property name="properties" ref="psrParsingManagerProperties"/>
+		<property name="agent" ref="PSRSource" />
+	</bean>
+
+
+</beans>

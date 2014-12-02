@@ -1,0 +1,3 @@
+Format,FilePattern,FilePath,MetaData
+PORTFOLIO,portfolioHeirarchy.csv,,
+UVR,.*UVR.gz,,ANZkey=0;1DVaRPL_AUD=N/A;10DVaRPL_AUD=N/A

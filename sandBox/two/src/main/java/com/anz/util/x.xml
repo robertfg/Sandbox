@@ -1,0 +1,33 @@
+<DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="ASIA\anaboc"
+			GeneratedFromPackageName="BackRestoreSSIS" GeneratedFromPackageID="{85BE3868-C0A5-4686-9EB7-8411E7260A6F}"
+			GeneratedDate="10/01/2012 4:27:06 PM" />
+	</DTSConfigurationHeading>
+	<Configuration ConfiguredType="Property"
+		Path="\Package.Connections[ServerConnection].Properties[ConnectionString]"
+		ValueType="String">
+		<ConfiguredValue>Data Source=W180373DE323E\MSLOCAL;Initial Catalog=master;Provider=SQLNCLI10.1;Integrated
+			Security=SSPI;Application
+			Name=SSIS-BackRestoreSSIS-{111107CF-2DB6-40F8-A198-7B6759C5E4C2}W180373DE323E\MSLOCAL;Auto Translate=False;</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property"
+		Path="\Package.Variables[User::backupDirectory].Properties[Value]"
+		ValueType="String">
+		<ConfiguredValue>c:\backups\</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property"
+		Path="\Package.Variables[User::isBackUp].Properties[Value]" ValueType="String">
+		<ConfiguredValue>1</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property"
+		Path="\Package.Variables[User::sourceDatabase].Properties[Value]"
+		ValueType="String">
+		<ConfiguredValue>'DBA'</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property"
+		Path="\Package.Variables[User::targetDatabase].Properties[Value]"
+		ValueType="String">
+		<ConfiguredValue>DBA_XXX</ConfiguredValue>
+	</Configuration>
+</DTSConfiguration>

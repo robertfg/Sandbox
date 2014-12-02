@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:security="http://www.springframework.org/schema/security"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                      http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<description>
+		Configuration of Spring Security.
+		By importing SecurityBasic.xml or SecurityDigest.xml
+		it is possible to switch between HTTP Basic authentication
+		and HTTP Digest authentication.
+	</description>
+
+	<import resource="classpath:SPRING-INF/security/SecurityBasic.xml" />
+
+	<!-- Simple user/password mapping defined with Spring Security facility -->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service id="UserDetailsService">
+				<security:user name="apuser" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="equity" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="credit" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="commodities" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="currency" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="fxoptions" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="traded" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="iro" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="localmarkets" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="nz" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="pacific" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="rates" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="nontraded" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="mgmttrading" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="overlay" password="r3r4NZ" authorities="ROLE_USER" />
+				<!-- Technical user used by ActivePivot Live to access IdGenerator & Longpolling services
+				should match what you put in activepivotlive.properties in your AP Live webapp -->
+				<security:user name="live" password="live" authorities="ROLE_TECH" />
+				<security:user name="limitsUser" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="signOffUser" password="r3r4NZ" authorities="ROLE_USER" />
+				
+				<security:user name="reportExtractor" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="specRiskUser" password="r3r4NZ" authorities="ROLE_USER" />
+				
+				<security:user name="equityDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="creditDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="commoditiesDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="currencyDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="fxoptionsDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="tradedDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="iroDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="localmarketsDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="nzDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="pacificDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="ratesDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="nontradedDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="mgmttradingDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="overlayDt" password="r3r4NZ" authorities="ROLE_USER" />
+				<security:user name="apuserDt" password="r3r4NZ" authorities="ROLE_USER" />
+				
+				
+				
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+	<!-- Custom Security Filter that propagates the context values -->
+	<!-- of the authenticated user inside ActivePivot instances    -->
+	<bean id="ContextValuePropagator" class="com.quartetfs.biz.pivot.security.impl.ContextValuePropagator">
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="contextValueManager" ref="ContextValueManager" />
+	</bean>
+
+	<!-- Context Value Manager, holds shared and private context values -->
+	<bean id="ContextValueManager" class="com.quartetfs.biz.pivot.security.impl.ContextValueManager">
+		<property name="roleMapping" ref="RoleMapping" />
+	</bean>
+
+	<!-- Basic ActivePivot Role Mapping:       -->
+	<!-- In this example we map user names     -->
+	<!-- to some ActivePivot Role XML resources -->
+	<bean id="RoleMapping" class="com.quartetfs.biz.pivot.security.impl.BasicRoleMapping">
+		<property name="mappings">
+			<props>
+				<prop key="apuser">ROLE-INF/All.xml</prop>
+				<prop key="equity">ROLE-INF/EquityHierarchy.xml</prop>
+				<prop key="credit">ROLE-INF/CreditHierarchy.xml</prop>
+				<prop key="commodities">ROLE-INF/CommoditiesHierarchy.xml</prop>
+				<prop key="currency">ROLE-INF/CurrencyHierarchy.xml</prop>
+				<prop key="fxoptions">ROLE-INF/FXOptionsHierarchy.xml</prop>
+				<prop key="traded">ROLE-INF/TradedHierarchy.xml</prop>
+				<prop key="iro">ROLE-INF/IROHierarchy.xml</prop>
+				<prop key="localmarkets">ROLE-INF/LocalMarketsHierarchy.xml</prop>
+				<prop key="nz">ROLE-INF/NZHierarchy.xml</prop>
+				<prop key="pacific">ROLE-INF/PacificHierarchy.xml</prop>
+				<prop key="rates">ROLE-INF/RatesHierarchy.xml</prop>
+				<prop key="nontraded">ROLE-INF/NonTradedHierarchy.xml</prop>
+				<prop key="mgmttrading">ROLE-INF/MgmtTradingHierarchy.xml</prop>
+				<prop key="overlay">ROLE-INF/OverlayHierarchy.xml</prop>				
+				
+				<prop key="limitsUser">ROLE-INF/LimitUsers.xml</prop>
+				<prop key="signOffUser">ROLE-INF/SignOffUsers.xml</prop>
+				<prop key="reportExtractor">ROLE-INF/ReportExtractorUsers.xml</prop>
+				<prop key="specRiskUser">ROLE-INF/SpecRiskUsers.xml</prop>
+				
+				<prop key="equityDt">ROLE-INF/EquityHierarchyDT.xml</prop>
+				<prop key="creditDt">ROLE-INF/CreditHierarchyDT.xml</prop>
+				<prop key="commoditiesDt">ROLE-INF/CommoditiesHierarchyDT.xml</prop>
+				<prop key="currencyDt">ROLE-INF/CurrencyHierarchyDT.xml</prop>
+				<prop key="fxoptionsDt">ROLE-INF/FXOptionsHierarchyDT.xml</prop>
+				<prop key="tradedDt">ROLE-INF/TradedHierarchyDT.xml</prop>
+				<prop key="iroDt">ROLE-INF/IROHierarchyDT.xml</prop>
+				<prop key="localmarketsDt">ROLE-INF/LocalMarketsHierarchyDT.xml</prop>
+				<prop key="nzDt">ROLE-INF/NZHierarchyDT.xml</prop>
+				<prop key="pacificDt">ROLE-INF/PacificHierarchyDT.xml</prop>
+				<prop key="ratesDt">ROLE-INF/RatesHierarchyDT.xml</prop>
+				<prop key="nontradedDt">ROLE-INF/NonTradedHierarchyDT.xml</prop>
+				<prop key="mgmttradingDt">ROLE-INF/MgmtTradingHierarchyDT.xml</prop>
+				<prop key="overlayDt">ROLE-INF/OverlayHierarchyDT.xml</prop>				
+				<prop key="apuserDt">ROLE-INF/ApUserDT.xml</prop>
+				
+				
+				</props>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,322 @@
+Root,Combined Trading
+Combined Trading,Structured Credit Discontinued Business
+Structured Credit Discontinued Business,Structured Credit FX hedges
+Structured Credit FX hedges,FXO TR PROP 07
+Combined Trading,Traded
+Traded,Management Trading
+Management Trading,Management Book 1
+Management Book 1,CM TR PROP 02
+Traded,Commodity Trading
+Commodity Trading,Comm Sales
+Comm Sales,CommS - Precious Metals
+CommS - Precious Metals,CM SALE P METLS
+CommS - Precious Metals,CM SALE XAU LEA
+CommS - Precious Metals,CM SALES OBU
+CommS - Precious Metals,CM UK SALE XAU
+CommS - Precious Metals,Q_SALE LDN GOLD
+CommS - Precious Metals,Q_SALES GOLD
+CommS - Precious Metals,Q_SALES SILVER
+CommS - Precious Metals,SALES PM CH
+CommS - Precious Metals,SALES PM HK
+CommS - Precious Metals,SALES PM ID
+CommS - Precious Metals,SALES PM IN
+CommS - Precious Metals,SALES PM JP
+CommS - Precious Metals,SALES PM KR
+CommS - Precious Metals,SALES PM PH
+CommS - Precious Metals,SALES PM SG
+CommS - Precious Metals,SALES PM TW
+CommS - Precious Metals,SALES PM UK
+CommS - Precious Metals,SALES PM VT
+Comm Sales,CommS - Options
+CommS - Options,FNX_000Y
+CommS - Options,FNX_PMET
+Traded,Funds
+Funds,Funds Equities
+Funds Equities,FUNDS PR EQ1
+Funds Equities,FUNDS PR EQ2
+Funds Equities,FUNDS PR EQ3
+Funds Equities,FUNDS PR EQ4
+Funds Equities,FUNDS TR EQ
+Traded,Global Currency
+Global Currency,Currency
+Global Currency,Strategic FX TRAD
+Global Currency,Structured Products
+Structured Products,FXO - ANZNB
+FXO - ANZNB,FXO NZ CTU EXO
+FXO - ANZNB,FXO NZ CTU VAN
+FXO - ANZNB,FXO NZ PROP
+FXO - ANZNB,FXO NZ TRANS
+FXO - ANZNB,ORMS_NBNZ EXOT
+FXO - ANZNB,FXO NZ RET
+Structured Products,FXO - Global Trading
+FXO - Global Trading,Global Precious Metals
+Global Precious Metals,Precious Metals
+Precious Metals,PM Options
+PM Options,CM TR XAU OPTN
+PM Options,CM TR CCY OPTN
+PM Options,CM TR XAG OPTN
+PM Options,CM TR PGM OPTN
+PM Options,CM TR XAU EXOT
+Precious Metals,PM Swaps
+PM Swaps,CM TR XAU FUT
+PM Swaps,CM TR XAU SWAP
+PM Swaps,FNX_000U       
+PM Swaps,FNX_0013       
+PM Swaps,FNX_0014       
+PM Swaps,FNX_0015       
+PM Swaps,FNX_003D       
+PM Swaps,FNX_001W
+PM Swaps,FNX_0029
+PM Swaps,FNX_002G
+PM Swaps,FNX_002U
+PM Swaps,FNX_002X
+PM Swaps,CFXDFUND AU    
+PM Swaps,CFXDRATERISKAU 
+PM Swaps,CM TR XAG FUT  
+PM Swaps,CM TR XAG SWAP 
+PM Swaps,CM TR PGM SWAP 
+PM Swaps,CM TR PM VOS 
+Precious Metals,PM PROP
+PM PROP,CM TR PROP 01
+PM PROP,CM TR PROP 03
+PM PROP,CM TR PROP 04
+PM PROP,CM TR PROP 05
+PM PROP,CM TR PROP 06
+PM PROP,CM TR PROP 07
+PM PROP,CM TR PROP 08
+PM PROP,CM TR PROP 10
+PM PROP,CM TR PROP 11
+Precious Metals,PM Other
+PM Other,CM TR PR MTL RE
+PM Other,CM TR XAU STP
+PM Other,CM TR FXAUDEPO
+PM Other,CM TR PR METALS
+PM Other,SP XAU EXOTIC
+PM Other,SP XAU QUANTO
+PM Other,CM TR ANZ PSF
+Global Precious Metals,Shanghai Gold Exchange
+Shanghai Gold Exchange,CM TR SH XAU
+Shanghai Gold Exchange,CM TR SH FUND
+Shanghai Gold Exchange,CM TR SH XAUSWP
+Shanghai Gold Exchange,CM TR PM NDF
+Global Precious Metals,Spear
+Spear,CM TR GLD ICGLD
+Spear,CM TR GLD AUS
+Spear,CM TR GLD BRNKS
+Spear,CM TR GLD G4S
+Spear,CM TR GLD IND
+Spear,CM TR GLD INDCG
+Spear,CM TR GLD KOR
+Spear,CM TR GLD KORCG
+Spear,CM TR GLD KORLC
+Spear,CM TR GLD THA
+Spear,CM TR GLD DEP
+Spear,CM TR GLD VTN
+Spear,CM TR GLD VTNCG
+Spear,CM TR GLD INDLC
+Spear,CM TR PPM FUT
+Spear,CM TR XAG SPT
+Spear,CM TR XPD SPT
+Spear,CM TR XPT SPT
+Spear,CM TR SLV AUS
+Spear,CM TR GLD DIST
+Spear,CM TR GLD CHNCG
+Spear,CM TR GLD CHN
+Spear,CM TR GLD SWZ
+FXO - Global Trading,FXO - Global Options
+FXO - Global Options,Markets Overlay Asset Trading
+Markets Overlay Asset Trading,FXO TR MOAT
+Markets Overlay Asset Trading,FXO TR MOAT PRP
+FXO - Global Options,FXO ASIA
+FXO ASIA,FXO ASIA GLOBAL
+FXO ASIA GLOBAL,FXO TR ASIA EXO
+FXO ASIA GLOBAL,FXO TR ASIA NTH
+FXO ASIA GLOBAL,FXO TR ASIA VAN
+FXO ASIA GLOBAL,ORMS_ASIAN EXOT
+FXO ASIA GLOBAL,FXO TR ASIA TRN
+FXO ASIA GLOBAL,FXO TR QU ASIA
+FXO ASIA GLOBAL,FXO ASIA PROP
+FXO ASIA PROP,FXO TR PROP 05
+FXO ASIA PROP,FXO TR PROP 13
+FXO ASIA,FXO ASIA ONSHORE
+FXO ASIA ONSHORE,FXO AISA ID
+FXO AISA ID,ORMS_PTANZ PAN
+FXO AISA ID,IDJ FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA CH
+FXO ASIA CH,CH FXO VAN BJ
+FXO ASIA CH,CH FXO VAN GZ
+FXO ASIA CH,CH FXO VAN SH
+FXO ASIA CH,CH LTD FXO BJ
+FXO ASIA CH,CH LTD FXO GZ
+FXO ASIA CH,CH LTD FXO SH
+FXO ASIA ONSHORE,FXO ASIA TW
+FXO ASIA TW,TWB FXO VAN ON
+FXO ASIA TW,TWD FXO RBS ON
+FXO ASIA TW,TWD FXOD RBS ON
+FXO ASIA TW,TWT FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA SG
+FXO ASIA SG,SGB FXO VAN ON
+FXO ASIA SG,SGC FXO VAN ON
+FXO ASIA SG,SG FXO RBS ON
+FXO ASIA ONSHORE,FXO ASIA PH
+FXO ASIA PH,PHB FXO VAN ON
+FXO ASIA PH,PHP FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA KR
+FXO ASIA KR,KR FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA JP
+FXO ASIA JP,JP FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA HK
+FXO ASIA HK,HK FXO RBS ON
+FXO ASIA HK,HK FXO VAN ON
+FXO ASIA ONSHORE,FXO ASIA VN
+FXO ASIA VN,VT FXO VAN ON
+FXO - Global Options,FXO GLOBAL
+FXO GLOBAL,FXO PROP
+FXO PROP,FXO TR PROP 01
+FXO PROP,FXO TR PROP 02
+FXO PROP,FXO TR PROP 03
+FXO PROP,FXO TR PROP 04
+FXO PROP,FXO TR PROP 06
+FXO PROP,FXO TR PROP 08
+FXO PROP,FXO TR PROP 10
+FXO PROP,FXO TR PROP 11
+FXO PROP,FXO TR PROP 12
+FXO PROP,FXO TR PRP TEAM
+FXO PROP,FUNDS PR FX1 AU
+FXO PROP,FUNDS PR FX2 AU
+FXO PROP,FUNDS TR FX AU
+FXO GLOBAL,FXO Customer
+FXO Customer,FXO TR CTU VAN
+FXO Customer,FXO TR CTU EXO
+FXO Customer,FXO TR CTU COMP
+FXO Customer,ORMS_CUST EXOT
+FXO Customer,D STRAT AU
+FXO Customer,FXO TR TRANS
+FXO Customer,FXO TR QU CORR
+FXO GLOBAL,FXO Main
+FXO Main,FXO TR AUNZ EXO
+FXO Main,FXO TR AUNZ SD
+FXO Main,FXO TR AUNZ VAN
+FXO Main,FXO TR LDD EXO
+FXO Main,FXO TR LDD VAN
+FXO Main,FXO TR QU AUNZ
+FXO GLOBAL,FXO G10
+FXO G10,FXO TR G10 AU
+FXO G10,FXO TR EUR AU
+FXO G10,FXO TR JPY AU
+FXO G10,FXO TR QU G10
+FXO GLOBAL,FXO Other
+FXO Other,FXO TR AUDXXX
+FXO Other,FXO TR FIJI EXO
+FXO Other,FXO TR FIJI VAN
+FXO Other,ORMS_LG D EX OP
+FXO Other,FXO TR STR PROD
+FXO Other,FXO Retained Earnings
+FXO Retained Earnings,FXO GLO AUNZ RE
+FXO Retained Earnings,FXO GLO CORR RE
+FXO Retained Earnings,FXO GLO EUR RE
+FXO Retained Earnings,FXO GLO JPY RE
+FXO Retained Earnings,FXO GLO LDN RE
+FXO Retained Earnings,FXO GLO PROP RE
+FXO Retained Earnings,FXO GLO RET E
+FXO Retained Earnings,FXO MX ROLL BK
+FXO Retained Earnings,FXO TR ROLL
+FXO Retained Earnings,FXO ASIA ROLL
+FXO Retained Earnings,FXO ASIA RET E
+FXO Retained Earnings,FNX_003Q
+FXO - Global Options,FXO BTB
+FXO BTB,FXO TR BTB EXO
+FXO BTB,TWT FXO BTB ON 
+FXO BTB,TWB FXO BTB ON 
+FXO BTB,CH FXO BTB ON
+FXO BTB,KR FXO BTB ON
+FXO BTB,HK FXO BTB ON
+FXO BTB,SGB FXO BTB ON 
+FXO BTB,SGC FXO BTB ON 
+FXO BTB,CH FXO BTB BJ
+FXO BTB,CH FXO BTB SH
+FXO BTB,CH FXO BTB GZ
+FXO - Global Options,FXO - Tactical RE
+FXO - Tactical RE,FXO TR EXO
+FXO - Tactical RE,FXO EXO HK ON
+FXO - Tactical RE,FXO EXO SGB ON
+FXO - Tactical RE,FXO EXO SGC ON
+FXO - Tactical RE,FXO EXO TW OBU 
+FXO - Tactical RE,FXO EXO TW DBU 
+FXO - Tactical RE,FXO EXO CH ON
+Traded,Sales
+Sales,FXO Sales
+FXO Sales,FXO Sales - Asia
+FXO Sales - Asia,FXO SALE SG
+FXO Sales,FXO Sales - Aust
+FXO Sales - Aust,FXO SALE AU
+FXO Sales - Aust,FXO SALE INV EQ
+FXO Sales - Aust,FXO SALE STRUCT
+FXO Sales,FXO Sales - Lon
+FXO Sales - Lon,FXO SALE UK
+FXO Sales,FXO Sales - NZ
+FXO Sales - NZ,FXO NZ SALES
+Root,Equity
+Equity,Equity - Asia
+Equity - Asia,Equity Asia - IPG
+Equity Asia - IPG,EQHK VI HK M AU
+Equity Asia - IPG,EQHK VI HK N AU
+Equity Asia - IPG,EQHK VI SG M AU
+Equity Asia - IPG,EQHK FND AU
+Equity Asia - IPG,EQHK VI SG N AU
+Equity Asia - IPG,EQHK VS HK D AU
+Equity Asia - IPG,EQHK VS HK M AU
+Equity Asia - IPG,EQHK VS HK N AU
+Equity Asia - IPG,EQHK VS SG D AU
+Equity Asia - IPG,EQHK VS SG M AU
+Equity Asia - IPG,EQHK VS SG N AU
+Equity Asia - IPG,EQ HK OPT AU
+Equity Asia - IPG,EQ HK STRD ON
+Equity Asia - IPG,EQ HK STRD AU
+Equity Asia - IPG,EQSG STRD ON
+Equity Asia - IPG,EQSG STRDDBU ON
+Equity - Asia,Equity Asia - Trading
+Equity Asia - Trading,EQHKEXOSSMAU 
+Equity Asia - Trading,EQHKEXOSSDAU 
+Equity Asia - Trading,EQHKEXOSSNAU 
+Equity Asia - Trading,EQHKEXOSCMAU 
+Equity Asia - Trading,EQHKEXOSCDAU 
+Equity Asia - Trading,EQHKEXOSCNAU 
+Equity Asia - Trading,EQHKEXOISMAU 
+Equity Asia - Trading,EQHKEXOISNAU 
+Equity Asia - Trading,EQHKEXOICMAU 
+Equity Asia - Trading,EQHKEXOICNAU 
+Equity Asia - Trading,EQ HK MXVAR ON 
+Equity Asia - Trading,EQSG MXVAR ON
+Equity Asia - Trading,EQSG MXVARBU ON
+Equity,Equity - Aust
+Equity - Aust,Equity Aust - IPG
+Equity Aust - IPG,Equity - CPPI
+Equity - CPPI,IPG ANZ DISC SG
+Equity - CPPI,IPG RSK MGT SG
+Equity Aust - IPG,Equity - IPG
+Equity - IPG,IPG ANZ DISC AU
+Equity - IPG,IPG AU
+Equity Aust - IPG,Equity - RALI
+Equity - RALI,IPG RALI AU
+Equity - RALI,IPG EXOT AU
+Equity - RALI,IPG PH EXOT AU
+Equity - Aust,Equity - Aust Sales
+Equity - Aust Sales,SALES AUST EWD
+Equity - Aust,Equity - Aust Trading
+Equity - Aust Trading,IPG EQ AU
+Equity - Aust Trading,IPG EQ DB AU
+Equity - Aust Trading,IPG EQ FIN AU
+Equity - Aust Trading,IPG EQ OPT AU
+Equity - Aust Trading,IPG EQ 1A
+Equity - Aust Trading,IPG EQ 1B
+Equity - Aust Trading,IPG EQ 2A
+Equity - Aust Trading,IPG EQ 2B
+Equity - Aust Trading,IPG EQ 3A
+Equity - Aust Trading,IPG EQ 3B
+Equity - Aust,Equity - Sing Trading
+Equity - Sing Trading,IPG EQ ASIA
+Equity,Equity - Management
+Equity - Management,Equity - Management 1
+Equity - Management 1,EQ CVA MGT
+Equity,Equity - NZ

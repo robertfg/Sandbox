@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd
+		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	
+	<!-- ##################################################### -->
+	<!-- Web Service export for ActivePivot Extractor Services -->
+	<!-- ##################################################### -->
+	
+	  
+	<bean id="DataManageMentService" class="com.quartetfs.pivot.anz.webservices.impl.DataManageMentService">
+		<property name="cubeCleaner" ref="CubeCleaner" />
+	</bean>
+
+	<jaxws:endpoint id="DataManageMentWebService" implementor="#DataManageMentService"  address="/DataManageMentService">
+		<jaxws:dataBinding>
+			<ref bean="JaxbDataBinding"/>
+		</jaxws:dataBinding>
+	</jaxws:endpoint>
+
+	<!-- ############################################################################ -->
+	<!-- CXF utils -->
+	<!-- ############################################################################ -->
+	<bean id="JaxbDataBinding" scope="prototype" class="org.apache.cxf.jaxb.JAXBDataBinding" factory-bean="JaxbFactory" factory-method="create" />
+	<bean id="JaxbFactory" class="com.quartetfs.biz.pivot.webservices.impl.JAXBDataBindingFactory" />
+
+</beans>

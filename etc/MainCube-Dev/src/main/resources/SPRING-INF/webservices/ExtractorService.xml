@@ -1,0 +1,788 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd
+		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<!-- ##################################################### -->
+	<!-- Web Service export for ActivePivot Extractor Services -->
+	<!-- ##################################################### -->
+	
+	<bean id="extractCoordinator" class="com.quartetfs.pivot.anz.service.export.ExtractCoordinator"/>
+    	 
+	
+	<bean id="extractUtils" class="com.quartetfs.pivot.anz.extraction.ExtractUtils">
+	<property name="mappingManager" ref="containerMapping"/>
+	<property name="defaultDimension" value="${export.defaultDimension:Risk Portfolio Hierarchy}" />
+	<property name="extractionDirectory" value="${extractionDirectory}" />
+	<property name="crossJoinProperties" ref="CrossJoinProperties"/>
+	<property name="signOffSql" value="select ID,ContainerName,LocationPath,COBDate from DW.vw_SignOffAndExclude SignOff where isExcluded='0'"/>
+	<property name="dateService"  ref="dateService"/>
+			
+	   <property name="vectorizeContainer">
+	   	   <list>
+	   			<value>FXO_DELGAMMA</value>
+	   	    	<value>IR_GAMMA</value>
+	   		    <value>GAMMA_BASIS</value>
+	 	  </list>
+	   </property>
+	   <property name="vectorContainerMeasureMapping">
+	   		<map>
+	   			<entry key="FXO_DELGAMMA-M_RESULTV.SUM" value="FXDELGAMMAV.VECTOR_RESULTV" />
+	   			<entry key="FXO_DELGAMMA-M_RESULT.SUM"  value="FXDELGAMMA.VECTOR_RESULT" />
+	   			<entry key="IR_GAMMA-M_RESULTV.SUM"     value="IRGAMMA_MRESULTV.VECTOR_RESULTV" />
+	   			<entry key="IR_GAMMA-M_RESULT.SUM"      value="IRGAMMA_MRESULT.VECTOR_RESULT" />
+	   			<entry key="GAMMA_BASIS-M_RESULTV.SUM"  value="GAMMA_BASISV.VECTOR_RESULTV" />
+	   			<entry key="GAMMA_BASIS-M_RESULT.SUM"   value="GAMMA_BASIS.VECTOR_RESULT" />
+	   		</map>
+	   </property>
+		<property name="containerNameToPsrName">
+			<map>
+				<entry key="EQ_DELTAGAMMA" value="SEDG0" />
+				<entry key="EQ_VEGA" value="SEVG0" />
+				<entry key="FXO_DELGAMMA" value="SFDG0" />
+				<entry key="FXO_VEGA" value="SFVG0" />
+				<entry key="NPV" value="SNPV0" />
+				<entry key="THETA" value="STHE0" />
+				<entry key="ANZ_STRESS_EQ_ALG" value="TAZE0" />
+				<entry key="ANZ_STRESS_FX_ALG" value="TAZF0" />
+				<entry key="ANZ_STRESS_IR_ALG" value="TAZR0" />
+				<entry key="APRA_STRESS_EQ" value="TAPE0" />
+				<entry key="APRA_STRESS_FX_ALG" value="TAPF0" />
+				<entry key="APRA_STRESS_IR" value="TAPR0" />
+				<entry key="APRA_STRESS_PM" value="TAPM0" />
+				<entry key="DELTA_BASIS" value="SDVO1" />
+				<entry key="IR_VEGA" value="SIVG0" />
+				<entry key="DV01" value="SDVO0" />
+				<entry key="COM_DELTA" value="SCDG0" />
+				<entry key="COM_GAMMA" value="SCDG0" />
+				<entry key="COM_DELTAGAMMA" value="SCDG0" />
+				<entry key="COM_GAMMA" value="SCDG0" />
+				<entry key="PAR_DV01" value="SDVO0" />
+				<entry key="PAR_CR01" value="SCRO0" />
+				<entry key="IR_GAMMA" value="SIGM0" />
+				<entry key="GAMMA_BASIS" value="SIGM1" />
+				<entry key="INFLATION_DELTA" value="SNDL0" />
+				<entry key="CM_PL_LADDER" value="SCPL0" />
+				<entry key="EQ_DEVIDENDS" value="SEDV0" />
+				<entry key="EQ_CORRELATIONS" value="SECR0" />
+				<entry key="EQ_MONEYNESSVEGA" value="SEMV0" />
+				<entry key="IR_CORR_SENS" value="SICR0" />
+				<entry key="IR_VOLGA" value="SIVL0" />
+				<entry key="IR_VANNA" value="SIVN0" />
+				<entry key="IR_SMILE_SENS" value="SISM0" />
+				<entry key="IR_CORR_SENS" value="SICR0" />
+				<entry key="APRA_STRESS_CM" value="TAPD0" />
+				<entry key="ANZ_STRESS_CM" value="TAZD0" />
+				<entry key="EXTRAORD_ALG" value="TEXS0" />
+				<entry key="EXTRAORD_NZ_ALG" value="TEXS1" />
+				<entry key="SCCL" value="TSCC0" />
+				<entry key="IR_CORR_STRESS" value="TICR0" />
+				<entry key="CM_CORRELATIONS" value="SCCR0" />
+				<entry key="ANZ_STRESS_EQCORR" value="TAZO0" />
+				<entry key="COM_VEGA" value="SCDG0" />
+				<entry key="COM_DELTA" value="SCDG0" />
+				<entry key="COM_GAMMA" value="SCDG0" />
+				<entry key="ANZ_STRESS_CM_ALG" value="TAZD0" />
+				<entry key="ANZ_STRESS_CM_INTD" value="TAZD1" />
+				<entry key="ANZ_STRESS_CM_INTE" value="TAZD2" />
+				<entry key="EQ_DIVIDENDS" value="SEDV0" />
+				<entry key="VaR and P&amp;L" value="B1AL0" />
+				<entry key="VAR_1D" value="V1AL0" />
+				<entry key="VAR_10D" value="VXAL0" />
+				<entry key="VAR_1D_AGG" value="V1AL0" />
+				<entry key="VAR_10D_AGG" value="VXAL0" />
+				<entry key="VAR_STRESS" value="VSAL0" />
+				
+				<entry key="HYPO" value="B1AL0" />
+				<entry key="HYPO_1D" value="B1AL2" />
+				<entry key="HYPO_10D" value="B1AL3" />
+				<entry key="RR_SENS" value="SRRO0" />
+				<entry key="IR_VANNAVOLGA" value="SIVL0" />
+				<entry key="ANZ_STRESS_INF" value="TAZI0" />
+				<entry key="ANZ_STRESS_CREDIT" value="TAZC0" />
+				<entry key="ANZ_STRESS_IR_VOL" value="TAZS0" />
+				<entry key="APRA_STRESS_IR_VOL" value="TAPV0" />
+				
+				<entry key="APRA_STRESS_INF" value="TAPI0" />
+				<entry key="EQ_SPOTVOL" value="SESV0" />
+				<entry key="COM_ADAPTED_DELTA" value="SCAD0" />
+				<entry key="VAR_1540" value="VFAL0" />
+				
+				<entry key="NOTIONAL_VALUE" value="MRE01" />
+				<entry key="CAPITAL_VALUE"  value="MRE01" />
+				<entry key="MARKET_VALUE"   value="MRE01" />
+				
+				<entry key="CATCH_ALL"      value="SALL0" />
+				
+				
+			</map>
+		</property>
+
+ <property name="nonVarCsvOutputMapping">
+		<list>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="0" />
+				<property name="name" value="DBId" />
+				<property name="type" value="var" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="1" />
+				<property name="name" value="Base Currency@Base Currency" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="2" />
+				<property name="name" value="National Market@National Market" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="3" />
+				<property name="name" value="Securities Exchange@National Market" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="4" />
+				<property name="name" value="Sector@Sector" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="5" />
+				<property name="name" value="Equity Code@Underlying-EQ" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="6" />
+				<property name="name" value="Currency Code@Underlying-CCY" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="7" />
+				<property name="name" value="Currency Pair@Underlying-CCY PAIR" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="8" />
+				<property name="name" value="Underlying-IR Curve@Underlying-IR Curve" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="9" />
+				<property name="name"
+					value="Scenario-EQ Spot Price@Scenario-EQ Spot Price" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="10" />
+				<property name="name" value="Scenario-EQ Vol@Scenario-EQ Vol" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="11" />
+				<property name="name"
+					value="Scenario-FX Spot Price@Scenario-FX Spot Price" />
+				<property name="type" value="dim" />
+				<property name="overWriteIf" value="FXO_DELGAMMA" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="12" />
+				<property name="name" value="Scenario-FX Vol@Scenario-FX Vol" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="13" />
+				<property name="name" value="Scenario-IR@Scenario-IR" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="14" />
+				<property name="name"
+					value="Scenario-ANZ Stress Scenarios@Scenario-ANZ Stress Scenarios" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="15" />
+				<property name="name" value="Scenario-Term@Scenario-Term" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="16" />
+				<property name="name" value="Scenario-Theta Decay@Scenario-Theta Decay" />
+				<property name="type" value="dim" />
+			</bean>
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="17" />
+				<property name="name" value="Position ID@Position ID" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="18" />
+				<property name="name"
+					value="Scenario-Correlation Type@Scenario-Correlation Type" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="19" />
+				<property name="name"
+					value="Scenario-Correlation Shock@Scenario-Correlation Shock" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="20" />
+				<property name="name" value="Scenario-Term Bucket@Scenario-Term Bucket" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="21" />
+				<property name="name" value="Scenario-Com Vol@Scenario-Com Vol" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="22" />
+				<property name="name" value="Scenario-IR Gamma@Scenario-IR Gamma" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="23" />
+				<property name="name" value="Scenario-IR Vol@Scenario-IR Vol" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="24" />
+				<property name="name" value="Scenario-EQ Moneyness@Scenario-EQ Moneyness" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="25" />
+				<property name="name"
+					value="Scenario-Recovery Rate@Scenario-Recovery Rate" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="26" />
+				<property name="name" value="Spread-Type1@Spread Type" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="27" />
+				<property name="name"
+					value="Scenario-Term Underlying@Scenario-Term Underlying" />
+				<property name="type" value="dim" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="28" />
+				<property name="name" value="M_RESULTV.SUM" />
+				<property name="type" value="msr" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="29" />
+				<property name="name" value="M_RESULT.SUM" />
+				<property name="type" value="msr" />
+			</bean>
+		
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="30" />
+				<property name="name" value="Scenario-Com Price@Scenario-Com Price" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="31" />
+				<property name="name" value="Scenario-Dividends@Scenario-Dividends" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="32" />
+				<property name="name"
+					value="Grp:CR Rating - Generic@Grp:CR Rating - Generic" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="33" />
+				<property name="name" value="Underlying-COM@Underlying-COM" />
+				<property name="type" value="dim" />
+			</bean>
+		
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="11" />
+				<property name="name" 	value="Scenario-FX Spot Price (Stress)@Scenario-FX Spot Price (Stress)" />
+				<property name="type" value="dim" />
+				<property name="overWriteIf" value="APRA_STRESS_FX_ALG,APRA_STRESS_PM" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="34" />
+				<property name="name" value="Grp:COM Sub-Type@Grp:COM Sub-Type" />
+				<property name="type" value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="35" />
+				<property name="name" value="Scenario-Term Gen Pillar@Scenario-Term Gen Pillar" />
+				<property name="type" value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="36" />
+				<property name="name"  value="Scenario-ANZ Stress Scenarios@Scenario-ANZ Stress Scenarios" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="37" />
+				<property name="name"  value="Deal Currency@Deal Currency" />
+				<property name="type"  value="dim" />
+				<property name="loc"   value="6" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="38" />
+				<property name="name"  value="Grp:COM Type@Grp:COM Type" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="39" />
+				<property name="name" value="M_RESULT_LOT.SUM" />
+				<property name="type" value="msr" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="40" />
+				<property name="name"  value="Spread-Type2@Spread Type" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="41" />
+				<property name="name"  value="Expiry Date@Expiry Date" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="42" />
+				<property name="name"  value="Grp:COM Long Name@Grp:COM Long Name" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="43" />
+				<property name="name"  value="Grp:EQ Type@Grp:EQ Type" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="44" />
+				<property name="name"  value="Grp:EQ Tier@Grp:EQ Tier" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="45" />
+				<property name="name"  value="Grp:EQ Region@Grp:EQ Region" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="46" />
+				<property name="name"  value="Grp:CR Rating@Grp:CR Rating" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="47" />
+				<property name="name"  value="Grp:CCY Family - FXO (Deal Currency)@Grp:CCY Family - FXO (Deal Currency)" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="48" />
+				<property name="name"  value="Grp:CCY Family - FXO (Underlying CCY)@Grp:CCY Family - FXO (Underlying CCY)" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="49" />
+				<property name="name"  value="Grp:CCY Group (Deal Currency)@Grp:CCY Group (Deal Currency)" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="50" />
+				<property name="name"  value="Grp:CCY Group (Underlying CCY)@Grp:CCY Group (Underlying CCY)" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="51" />
+				<property name="name"  value="Grp:CCY Pair@Grp:CCY Pair" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="52" />
+				<property name="name"  value="Grp: COM Unit@Grp: COM Unit" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="53" />
+				<property name="name"  value="Grp:COM Stress Label@Grp:COM Stress Label" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="54" />
+				<property name="name"  value="Grp:COM Index Name@Grp:COM Index Name" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="55" />
+				<property name="name"  value="Grp:CR Agency@Grp:CR Agency" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="56" />
+				<property name="name"  value="Grp:CR Investment Grade@Grp:CR Investment Grade" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="57" />
+				<property name="name"  value="Grp:CR Rating Band - LT@Grp:CR Rating Band - LT" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="58" />
+				<property name="name"  value="Grp:CR Rating Band - Other@Grp:CR Rating Band - Other" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="59" />
+				<property name="name"  value="Grp:CR Rating Band - Sec@Grp:CR Rating Band - Sec" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="60" />
+				<property name="name"  value="Grp:CR Index Type@Grp:CR Index Type" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="61" />
+				<property name="name"  value="Grp:EQ Full Name@Grp:EQ Full Name" />
+				<property name="type"  value="dim" />
+			</bean>
+			
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="62" />
+				<property name="name"  value="Curve Type@Curve Type" />
+				<property name="type"  value="dim" />
+			</bean>
+		
+			
+		 	
+			<bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="63" />
+				<property name="name"  value="Product SubType@Product SubType" />
+				<property name="type"  value="dim" />
+			</bean>
+	    
+	     <bean class="com.quartetfs.pivot.anz.service.export.ExtractHeader">
+				<property name="index" value="64" />
+				<property name="name"  value="Catch All Risk Type@Catch All Risk Type" />
+				<property name="type"  value="dim" />
+			</bean>
+	    
+			
+		</list>
+	</property>
+	
+	<property name="vectorConfigurations">
+		<map>
+			<entry key="varConfidenceLevelConfig" value-ref="varConfidenceLevelConfig"/>
+			<entry key="varPnlVectorConfig" value-ref="varPnlVectorConfig"/>
+	   </map>
+	</property>
+	
+			   
+	</bean> 
+	
+   <bean id="varPnlVectorConfig" class="com.quartetfs.pivot.anz.utils.VectorConfig">
+	    <property name="columnToVectorize">
+	    	<list>
+	    		<value>4</value>
+	    		<value>6</value>
+	    	</list>
+	    </property>
+	    <property name="columnKeyId">
+	    	<list>
+	    		<value>3</value>
+	    		<value>5</value>
+	    	</list>
+	    </property>
+	    
+	    <property name="columnToExtract">
+	    	<list>
+	    		<value>0</value>
+	    		<value>3</value>
+	    		<value>4</value>
+	    		<value>5</value>
+	    		<value>6</value>
+	    	</list>	
+	    </property>
+	    
+        <property name="columnFormatting">  
+    		<map>
+   	         <entry key="4"   value="yyyyMMdd" /> 
+    		</map>   
+        </property>  
+   		<property name="mandatory">
+   			<list>
+   				<value>0</value>
+   			</list>
+  		</property>
+  </bean>
+
+  <bean id="varConfidenceLevelConfig" class="com.quartetfs.pivot.anz.utils.VectorConfig">
+	<property name="columnToExtract">
+		<list>
+			<value>0</value>
+			<value>1</value>
+			<value>2</value>
+			<value>3</value>
+			<value>4</value>
+			<value>5</value>
+			<value>6</value>
+			<value>7</value>
+			<value>8</value>
+			<value>9</value>
+			<value>10</value>
+			<value>11</value>
+			<value>12</value>
+			<value>13</value>
+			<value>14</value>
+			<value>15</value>
+			<value>16</value>
+			<value>17</value>
+			<value>18</value>
+			<value>19</value>
+			<value>20</value>
+			<value>21</value>
+			<value>22</value>
+			<value>23</value>
+			<value>24</value>
+			<value>25</value>
+			<value>26</value>
+			<value>27</value>
+			<value>28</value>
+			<value>29</value>
+			<value>30</value>
+			<value>31</value>
+			<value>32</value>
+			<value>33</value>
+			<value>34</value>
+			<value>35</value>
+			<value>36</value>
+			<value>37</value>
+			<value>38</value>
+			<value>39</value>
+			<value>40</value>
+			<value>41</value>
+			<value>42</value>
+			<value>43</value>
+			<value>44</value>
+			<value>45</value>
+			
+			<value>46</value>
+			<value>47</value>
+			<value>48</value>
+			<value>49</value>
+			<value>50</value>
+			<value>51</value>
+			<value>52</value>
+			<value>53</value>
+			<value>54</value>
+			<value>55</value>
+			<value>56</value>
+			<value>57</value>
+			<value>58</value>
+			<value>59</value>
+			<value>60</value>
+			<value>61</value>
+			<value>62</value>
+			<value>63</value>
+			<value>64</value>
+			
+			
+			
+		</list>
+	</property> 
+	
+	    <property name="columnFormatting">
+    		<map>
+   	         <entry key="1"   value="yyyyMMdd" />
+   	         <entry key="4"   value="percent" />
+   	        </map>    
+        </property>
+   		
+   		<property name="mandatory">
+	   		 <list>
+	   		 	<value>0</value>
+	   		 </list>
+   		 </property>
+   		<property name="columnToMerge">
+   			<list>
+   				<value>5</value>
+				<value>6</value>
+				<value>7</value>
+				<value>8</value>
+				<value>9</value>
+				<value>10</value>
+				<value>11</value>
+				<value>12</value>
+				<value>13</value>
+				<value>14</value>
+				<value>15</value>
+				<value>16</value>
+  			</list>
+   		</property>
+   		
+   		<property name="removeFromChar" value="~"/>
+  </bean>
+  
+   <bean id="extractFileWriterPool" class="com.quartetfs.pivot.anz.service.export.ExtractFileWriterPool" >
+      <constructor-arg index="0" value="100" />
+      <constructor-arg index="1" value="-1" /><!-- threadpool size -->
+      <constructor-arg index="2" value="1000" />
+      <constructor-arg index="3" ref="extractCoordinator" />
+   </bean>
+   
+   <bean id="vectorizerPool" class="com.quartetfs.pivot.anz.service.export.VectorizerPool" >
+   	  <constructor-arg index="0" value="50" />
+      <constructor-arg index="1" value="-1" /><!-- threadpool size -->
+      
+      <property name="vectorConfigurations">
+		<map>
+			<entry key="VAR_CONFIDENCE" value-ref="varConfidenceLevelConfig"/>
+			<entry key="VAR_PNL" 		value-ref="varPnlVectorConfig"/>
+			
+			<entry key="VAR_STRESS"     value-ref="varConfidenceLevelConfig"/>
+			
+			
+	   </map>
+	</property>
+	
+	<property name="destQueue" value="#{extractFileWriterPool.fileWriterQueue}" />
+	 
+   </bean>
+   
+   <bean id="extractAPQueryPool" class="com.quartetfs.pivot.anz.service.export.ExtractAPQueryPool">
+    	 <constructor-arg index="0" value="50" />
+         <constructor-arg index="1" value="-1" /><!-- threadpool size -->
+   </bean>
+
+	<bean id="exportPnlDataHelper" class="com.quartetfs.pivot.anz.service.export.ExportPnlDataHelper">
+		<property name="activePivotManager" ref="ActivePivotManager" />
+		<property name="extractionDirectory" value="${extractionDirectory}" />
+		<property name="taskQueueSize" value="${export.taskQueueSize:10}" />
+		<property name="exportBatchSize" value="${export.exportBatchSize:100}" />		
+		<property name="dateService"  ref="dateService"/>		
+		</bean>
+
+    <bean id="signOffUtils" class="com.quartetfs.pivot.anz.extraction.SignOffUtils">
+    	 <constructor-arg index="0" ref="DbUtils" />
+         <constructor-arg index="1" ref="extractFileWriterPool" />
+         <constructor-arg index="2" ref="vectorizerPool" />
+         <constructor-arg index="3" ref="extractAPQueryPool" />
+         <constructor-arg index="4" ref="extractUtils" />
+         <constructor-arg index="5" value="2000" />
+         <constructor-arg index="6" ref="exportPnlDataHelper" /> 
+         <constructor-arg index="7" value="6000" /> 
+         <constructor-arg index="8" value="3" /> 
+         <constructor-arg index="9" value="false" /> 
+         
+    </bean>	  
+	
+	
+	  
+	<bean id="ExtractorService" class="com.quartetfs.pivot.anz.extraction.ExtractorService">
+		<property name="manager" ref="ActivePivotManager" />
+		
+		<property name="PivotName" value="${marketRiskCubeName}"/>		
+		
+	     <constructor-arg index="0" ref="extractFileWriterPool" />
+         <constructor-arg index="1" ref="vectorizerPool" />
+         <constructor-arg index="2" ref="extractAPQueryPool" />
+         <constructor-arg index="3" ref="extractUtils" />
+         <constructor-arg index="4" ref="signOffUtils" />
+         
+   </bean>
+
+	
+	<jaxws:endpoint id="ExtractorWebService" address="/Extractor" implementor="#ExtractorService">
+		<jaxws:dataBinding>
+			<ref bean="JaxbDataBinding" />
+		</jaxws:dataBinding>  
+	</jaxws:endpoint>
+
+	<!-- ############################################################################ -->
+	<!-- CXF utils -->
+	<!-- ############################################################################ -->
+	<bean id="JaxbDataBinding" scope="prototype"
+		class="org.apache.cxf.jaxb.JAXBDataBinding" factory-bean="JaxbFactory"
+		factory-method="create" />
+	<bean id="JaxbFactory"
+		class="com.quartetfs.biz.pivot.webservices.impl.JAXBDataBindingFactory" />
+
+</beans>

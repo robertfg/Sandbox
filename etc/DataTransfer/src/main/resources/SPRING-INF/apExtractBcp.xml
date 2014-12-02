@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+   
+<util:properties id="apExtractBcpProperties"   location="classpath:resources/properties/apExtractBcp.${env}.properties" />
+ 
+	<bean id="apRdwNonVar" class="com.anz.rer.etl.csvToTable.BcpConfig" >
+		<constructor-arg index="0"          ref="apExtractBcpProperties" />
+		<property name="keyId"      		value="non-var" />
+		<property name="tableName"  		value="Staging.FactRiskMeasureNonVarDetail" />
+		<property name="csvSourceLength" 	value="37" />
+		<property name="bcpConfigFile" 		value="${etl.bcp.config.directory}/Staging.FactRiskMeasureNonVaRDetail.XML" />
+	</bean>
+	
+	<bean id="apRdwVar" class="com.anz.rer.etl.csvToTable.BcpConfig" >
+		<constructor-arg index="0"          ref="apExtractBcpProperties" />
+		<property name="keyId"      		value="var" />
+<!-- 			<property name="keyId"      		value="#{apRdwNonVar.keyId}" /> -->
+			
+		<property name="tableName"  		value="Staging.FactVaR" />
+		<property name="csvSourceLength" 	value="7" />
+		<property name="bcpConfigFile" 		value="${etl.bcp.config.directory}/Staging.FactVaR.XML" />
+	</bean>
+	
+	<bean id="apRdwPnl" class="com.anz.rer.etl.csvToTable.BcpConfig" >
+		<constructor-arg index="0"          ref="apExtractBcpProperties" />
+		<property name="keyId"      		value="pnl" />
+		<property name="tableName"  		value="Staging.FactVaRPnLVector" />
+		<property name="csvSourceLength" 	value="5" />
+		<property name="bcpConfigFile" 		value="${etl.bcp.config.directory}/Staging.FactVaRPnLVector.XML" />
+	</bean>
+
+ 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apRdwNonVar" />
+		<property name="targetMethod" value="initialize" />
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apRdwPnl" />
+		<property name="targetMethod" value="initialize" />
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apRdwVar" />
+		<property name="targetMethod" value="initialize" />
+	</bean>
+	 
+	<util:map id="bcpConfigMap">
+		<entry key="non-var" value-ref="apRdwNonVar" />
+		
+		<entry key="pnl-var_1d"   value-ref="apRdwPnl" />
+		<entry key="pnl-var_10d"  value-ref="apRdwPnl" />
+		
+		<entry key="var-var_1d"   value-ref="apRdwVar" />
+		<entry key="var-var_10d"  value-ref="apRdwVar" />
+		
+		<entry key="hypo"         value-ref="apRdwVar" />
+		
+		<entry key="var_1d#pnl"      value-ref="apRdwPnl" />
+		<entry key="var_10d#pnl"     value-ref="apRdwPnl" />
+		<entry key="var_1d#var"      value-ref="apRdwVar" />
+		<entry key="var_10d#var"     value-ref="apRdwVar" />
+		<entry key="hypo#var"       value-ref="apRdwVar" />
+		
+	</util:map>
+	
+	
+	
+	  <bean id="apExtractToDwhBcpProcessor" class="com.anz.rer.etl.directory.impl.BcpDirectoryFileProcessor" >
+    	<constructor-arg index="0" ref="apExtractBcpProperties" />
+    	<constructor-arg index="1" value="5" /> <!-- no of file to be process at the same time -->
+    	
+    	<constructor-arg index="2" value="13" />  <!--  sqlQueue      -->
+    	<constructor-arg index="3" value="1"  />  <!--  doneQueue     -->
+    	<constructor-arg index="4" value="5"  />  <!--  cleanUpQueue  -->
+    	<constructor-arg index="5" ref="dbUtils"  />  <!--  DB Utility common class  -->
+    	<constructor-arg index="6" value="true"  />  <!--  setting not to insert record to header table  -->
+    	<constructor-arg index="7" value="true"  />  <!--  setting not to insert record to fact table  -->
+    	<constructor-arg index="8" value="1"  />      <!--  number of retry the procedure will be executed before giving up      -->
+    	
+    	
+    	<property name="bcpConfig"  ref="bcpConfigMap"/>
+    	<property name="dataSource" ref="mssqlDataSource"/>
+    
+    	<property name="insertThread"     value="20"/> <!-- doing the bcp -->
+		<property name="doneThread"       value="10"/>  <!-- in charge with insert to header and transfer from staging to fact -->
+		
+    	<property name="ignoreString"     value="?"/>
+		<!-- <property name="columnDelimeter"  value="!@!"/> -->
+		<property name="columnDelimeter"  value=","/>
+		<property name="dataPartition"    value="2000"/> <!-- BCP chuck size -->
+		<property name="batchInsert"      value="10"/> <!-- number of record before executing executebatch-->
+			
+     </bean>
+	
+	<bean id="apExtractToDwhBcpDirWatcher" class="com.anz.rer.etl.directory.impl.DirectoryWatcherImpl">
+		<property name="dirWatcherImpl" ref="apExtractToDwhBcpProcessor" />
+	    <property name="interval"   	value="7000"/> 
+    </bean> 
+  
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apExtractToDwhBcpDirWatcher" />
+		<property name="targetMethod" value="run" />
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="apExtractToDwhBcpProcessor" />
+		<property name="targetMethod" value="initialize" />
+	</bean>
+	
+</beans>	 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+
+	<bean  id="globalException" class="com.quartetfs.pivot.anz.utils.ExceptionHandler" />
+
+ 	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+  		<property name="targetObject" ref="globalException" /> 
+  		<property name="targetMethod" value="registerExceptionHandler" /> 
+  	</bean>
+  
+	<bean id="LimitConfigInfo" class="com.quartetfs.pivot.anz.limits.bo.LimitConfigInfo">
+		<property name="debugLimits" value="${limits.debug:false}" />
+		<property name="limitMatcherThreads" value="${limits.matcherThreads:1}" />
+		<property name="matchTimeOutInSeconds" value="${limits.matcherTimeoutSecond:180}" />
+		<property name="limitResolveThreads" value="${limits.resolveThread:1}" />
+		<property name="extractDir" value="${extractionDirectory}" />
+		<property name="dimensionSeparator" value="${limits.dimensionSeparator:|}" />
+		<property name="locationSeparator" value="${limits.locationSeparator:@:@}" />
+		<property name="levelValueSeparator" value="${limits.levelValueSeparator:;}" />
+		
+		<property name="dateCols">
+			<util:set>
+				<value>COB Date@COB Date</value>
+				<value>VaR-Scenario Date@VaR-Scenario Date</value>
+			</util:set>
+		</property>
+		
+		<property name="doubleCols">
+			<util:set>
+				<value>VaR-Confidence Level@VaR-Confidence Level</value>
+			</util:set>
+		</property>
+		
+		<property name="longCols">
+			<util:set>
+				<value>VaR-Scenario Nr@VaR-Scenario Nr</value>
+			</util:set>
+		</property>
+	</bean>
+
+</beans>
